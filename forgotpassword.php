@@ -1,3 +1,35 @@
+<?php
+    session_start();
+    $error = false;
+    $sent = false;
+
+    if(isset($_SESSION["username"])){
+        header("Location: feed.php");
+    }
+
+    if(isset($_POST["email"])){
+
+        require_once('dbmanager.php');
+        require_once('connectionsingleton.php');
+
+        $dbmanager = new dbmanager();
+
+        $con = connectionSingleton::getConnection();
+
+        $error = !($dbmanager->emailExists($con, $_POST["email"]));
+
+        if(!$error){
+            require_once('helper.php');
+            $m = new Helper();
+            $newPass = $m->generateNewPassword();
+            if($dbmanager->updatePassword($con, $_POST["email"], $newPass)){
+                $sent = $m->sendNewPassword($_POST["email"],$newPass);
+            }            
+        }
+    }
+
+?>
+
 <!doctype html>
 <html lang="en">
     <head>
@@ -9,11 +41,19 @@
     <body>
         <div class="container-fluid d-flex justify-content-center align-items-center" style="height: 100vh;">
             <div style="width: 400px;">
-                <form>
+                <form action = "forgotpassword.php" method="Post">
                     <div class="form-group">
+                        <?php
+                            if($error){
+                                echo("<legend class='text-danger'>No Account is associated to this email!</legend>");
+                            }
+                            if($sent){
+                                echo("<legend>A password is sent to the email address!</legend>");
+                            }
+                        ?>
                       <label for="Email">Enter a email address associated to your account.</label>
-                      <input type="email" class="form-control" id="Email" placeholder="Enter email">
-                      <div id="emailHelp" class="form-text">
+                      <input name = "email" type="email" class="form-control" id="Email" placeholder="Enter email">
+                      <div id="emailHelp" class="form-text text-danger">
                         Enter a valid email!
                       </div>
                     </div>       
@@ -21,7 +61,7 @@
                         <button type="submit" class="btn btn-primary">Reset password</button>
                     </div>             
                     <div class="d-flex mt-2 justify-content-center">
-                        <a href="index.html">Back to Login!</a>
+                        <a href="index.php">Back to Login!</a>
                     </div>
                 </form>
             </div>

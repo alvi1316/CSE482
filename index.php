@@ -1,3 +1,28 @@
+<?php
+    session_start();
+    $error = false;
+
+    if(isset($_SESSION["username"])){
+        header("Location: feed.php");
+    }
+
+    if(isset($_POST["email"]) && isset($_POST["password"])){
+
+        require_once('dbmanager.php');
+        require_once('connectionsingleton.php');
+        $dbmanager = new dbmanager();
+
+        $con = connectionSingleton::getConnection();
+
+        $error = !($dbmanager->login($con, $_POST["email"], $_POST["password"]));
+
+        if(!$error){
+            $_SESSION["username"] = $dbmanager->getUsername($con, $_POST["email"]);
+            header("Location: feed.php");
+        }
+    }
+
+?>
 <!doctype html>
 <html lang="en">
     <head>
@@ -9,24 +34,28 @@
     <body>
         <div class="container-fluid d-flex justify-content-center align-items-center" style="height: 100vh;">
             <div style="width: 400px;">
-                <form>
-                    <legend class="text-danger">Invalid username or password!</legend>
+                <form action = "index.php" method="Post">
+                    <?php
+                        if($error){
+                            echo("<legend class='text-danger'>Invalid Email or Password!</legend>");
+                        }
+                    ?>
                     <div class="form-group">
                       <label for="Email">Email address</label>
-                      <input type="email" class="form-control" id="Email" placeholder="Enter email">
+                      <input name="email" type="email" class="form-control" id="Email" placeholder="Enter email">
                     </div>
                     <div class="form-group">
                       <label for="Password">Password</label>
-                      <input type="password" class="form-control" id="Password" placeholder="Password">
+                      <input name="password" type="password" class="form-control" id="Password" placeholder="Password">
                     </div>     
                     <div class="d-flex mt-2 justify-content-center">
                         <button  type="submit" class="btn btn-primary">Login</button>
                     </div>             
                     <div class="d-flex mt-2 justify-content-center">
-                        Don't have an account?<a href="signup.html">Signup!</a>
+                        Don't have an account?<a href="signup.php">Signup!</a>
                     </div>
                     <div class="d-flex justify-content-center">
-                        <a href="forgotpassword.html">Forgot Password!</a>
+                        <a href="forgotpassword.php">Forgot Password!</a>
                     </div>
                 </form>
             </div>

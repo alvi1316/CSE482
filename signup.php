@@ -1,3 +1,32 @@
+<?php
+
+    session_start();
+    $error = false;
+
+    if(isset($_SESSION["username"])){
+        header("Location: feed.php");
+    }
+
+    if(isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["password"])){
+
+        require_once('dbmanager.php');
+        require_once('connectionsingleton.php');
+        $dbmanager = new dbmanager();
+        
+        $con = connectionSingleton::getConnection();
+
+        $error = !($dbmanager->signup($con, $_POST["username"], $_POST["email"], $_POST["password"]));
+
+        if(!$error){
+            $_SESSION["username"] = $_POST["username"];
+            header("Location: feed.php");
+        }
+        
+    }
+
+?>
+
+
 <!doctype html>
 <html lang="en">
     <head>
@@ -10,19 +39,24 @@
     <body>
         <div class="container-fluid d-flex justify-content-center align-items-center" style="height: 100vh;">
             <div style="width: 450px;">
-                <form method="POST" action="profile.html">
+                <form method="POST" action="signup.php">
+                    <?php
+                        if($error){
+                            echo("<legend class='text-danger'>Username or Email already exist!</legend>");
+                        }
+                    ?>
                     <div class="form-group">
                         <label for="Username">Username</label>
-                        <input type="text" class="form-control" id="Username" placeholder="Enter Username">
+                        <input name="username" type="text" class="form-control" id="Username" placeholder="Enter Username">
                     </div>
                     <div class="form-group">
                         <label for="Email">Email address</label>
-                        <input type="email" class="form-control" id="Email" placeholder="Enter email">
+                        <input name="email" type="email" class="form-control" id="Email" placeholder="Enter email">
                         
                     </div>
                     <div class="form-group">
                         <label for="Password">Password</label>
-                        <input type="password" class="form-control" id="Password" placeholder="Enter Password">
+                        <input name="password" type="password" class="form-control" id="Password" placeholder="Enter Password">
                         
                     </div> 
                     <div class="form-group">
@@ -34,7 +68,7 @@
                         <button onclick="return validate()" type="submit" class="btn btn-primary">Sign up</button>
                     </div>             
                     <div class="d-flex mt-2 justify-content-center">
-                        Already have an account?<a href="index.html">Login!</a>
+                        Already have an account?<a href="index.php">Login!</a>
                     </div>
                 </form>
             </div>
