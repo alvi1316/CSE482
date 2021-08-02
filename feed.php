@@ -1,3 +1,13 @@
+<?php
+  session_start();
+
+  if(!isset($_SESSION["username"])){
+      header("Location: index.php");
+  }
+
+?>
+
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -14,9 +24,9 @@
   <body>
     <nav class="navbar navbar-dark bg-dark">
       <span class="navbar-brand mb-0 h1">Potato Rotato</span>
-      <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0">Search</button>
+      <form action="search.php" method="post" class="form-inline my-2 my-lg-0">
+        <input name="keyword" class="form-control mr-sm-2" type="search" placeholder="Search">
+        <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Search</button>
       </form>
     </nav>
 
@@ -127,7 +137,7 @@
           <div class="col-md-2 bg-secondary border border-dark">
             <h4 class="text-white mt-2">Option</h4>
             <a class="d-block text-white" href="#">Settings</a>
-            <a class="d-block text-white" href="#">Logout</a>
+            <a class="d-block text-white" href="logout.php">Logout</a>
           </div>
 
         </div>       

@@ -53,12 +53,9 @@
                         ?>
                       <label for="Email">Enter a email address associated to your account.</label>
                       <input name = "email" type="email" class="form-control" id="Email" placeholder="Enter email">
-                      <div id="emailHelp" class="form-text text-danger">
-                        Enter a valid email!
-                      </div>
                     </div>       
                     <div class="d-flex mt-2 justify-content-center">
-                        <button type="submit" class="btn btn-primary">Reset password</button>
+                        <button onclick="return validate()" type="submit" class="btn btn-primary">Reset password</button>
                     </div>             
                     <div class="d-flex mt-2 justify-content-center">
                         <a href="index.php">Back to Login!</a>
@@ -66,7 +63,8 @@
                 </form>
             </div>
         </div>
-
+        
+        <script src="JS/forgotpassword.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     </body>

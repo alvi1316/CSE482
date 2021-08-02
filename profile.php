@@ -1,3 +1,27 @@
+<?php
+  session_start();
+  $error = false;
+  $userInfo = null;
+
+  if(!isset($_SESSION["username"])){
+      header("Location: index.php");
+  }
+
+  if(isset($_GET["profilename"])){
+    require_once('dbmanager.php');
+    require_once('connectionsingleton.php');
+
+    $dbmanager = new dbmanager();
+        
+    $con = connectionSingleton::getConnection();
+
+    $userInfo = $dbmanager->getProfileUser($con, $_GET["profilename"]);
+
+  }else{
+    $error = true;
+  }
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -115,26 +139,38 @@
 
             <div class="col-md-8 h-100 postDiv">
 
-              <span class="d-block d-md-none" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>   
-
-              <div class="mt-md-3 mb-3 p-sm-5 p-1 border border-dark" style="height: 450px;">
-                <h5 class="mb-3">Shah Alvi Hossain</h5>
-                <div class="mb-1">
-                  <p class="d-inline">Writter Rank:</p>
-                  <img class="mr-5" src="images/rank/champion.png" alt="champion" style="width: 40px; height: 40px;">
-                  <p class="mr-5 d-sm-inline">Writter Points: 7626</p>
-                  <p class="d-inline">Followers</p>
-                  <img src="images/post/follower.png" alt="follower" style="width: 25px; height: 25px;">
-                  <p class="d-inline">29</p>
-                  <button class="btn btn-outline-primary my-2 my-sm-0 float-right">Follow</button>
-                </div>
-                <div class="mb-4">
-                  <p class="d-inline">Reader Rank:</p>
-                  <img class="mr-5" src="images/rank/gold.png" alt="gold" style="width: 40px; height: 40px;">
-                  <p class="d-sm-inline">Reader Points: 5274</p>
-                </div>  
-                <div class="border border-dark" id="chartContainer" style="height: 200px; width: 100%;"></div>             
-              </div>                        
+              <span class="d-block d-md-none" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>  
+              
+              <?php
+                if($error){
+                    echo("
+                      <div class='row p-2 m-md-3 m-1 justify-content-center'>
+                        <h3 class='d-inline text-danger'>No user exists!</h3>
+                      </div>
+                  ");
+                }else{
+                  echo("
+                    <div class='mt-md-3 mb-3 p-sm-5 p-1 border border-dark' style='height: 450px;'>
+                      <h5 class='mb-3'>".$userInfo["username"]."</h5>
+                      <div class='mb-1'>
+                        <p class='d-inline'>Writter Rank:</p>
+                        <img class='mr-5' src='images/rank/".$userInfo["writter_badge"].".png' alt='".$userInfo["writter_badge"]."' style='width: 40px; height: 40px;'>
+                        <p class='mr-5 d-sm-inline'>Writter Points: ".$userInfo["writter_rank"]."</p>
+                        <p class='d-inline'>Followers</p>
+                        <img src='images/post/follower.png' alt='follower' style='width: 25px; height: 25px;'>
+                        <p class='d-inline'>".$userInfo["followers"]."</p>
+                        <button class='btn btn-outline-primary my-2 my-sm-0 float-right'>Follow</button>
+                      </div>
+                      <div class='mb-4'>
+                        <p class='d-inline'>Reader Rank:</p>
+                        <img class='mr-5' src='images/rank/".$userInfo["reader_badge"].".png' alt='".$userInfo["reader_badge"]."' style='width: 40px; height: 40px;'>
+                        <p class='d-sm-inline'>Reader Points: ".$userInfo["reader_rank"]."</p>
+                      </div>  
+                      <div class='border border-dark' id='chartContainer' style='height: 200px; width: 100%;'></div>             
+                    </div>     
+                  ");
+                }             
+              ?>                    
               
               <div class="px-md-5 py-md-3 p-1 mb-3 border border-dark">
                 <div>
@@ -194,8 +230,9 @@
 
             <div class="col-md-2 bg-secondary border border-dark">
               <h4 class="text-white mt-2">Option</h4>
+              <a class="d-block text-white" href="feed.php">Home</a>
               <a class="d-block text-white" href="#">Settings</a>
-              <a class="d-block text-white" href="#">Logout</a>
+              <a class="d-block text-white" href="logout.php">Logout</a>
             </div>
 
         </div>       
