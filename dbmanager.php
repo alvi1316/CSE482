@@ -18,9 +18,11 @@
             $valid = FALSE;
             $result=$con->query($qry);
             $row=$result->fetch_assoc();
-            if($row['password']==$password){
-                $valid = TRUE;
-            }
+            if($row!=null){
+                if($row['password']==$password){
+                    $valid = TRUE;
+                }
+            }           
             return $valid;
         }
 
@@ -30,6 +32,14 @@
             $result=$con->query($qry);
             $row=$result->fetch_assoc();
             return $row['username'];
+        }
+
+        //Function to get userid
+        function getUserId($con, $username){
+            $qry = "SELECT u_id FROM user WHERE username = '$username'";
+            $result=$con->query($qry);
+            $row=$result->fetch_assoc();
+            return $row['u_id'];
         }
 
         //Function to check if email exists
@@ -70,6 +80,33 @@
             $result = $con->query($qry);
             $row = $result->fetch_array();
             return $row;
+        }
+
+        function isFollowing($con, $follower_id, $following_id){
+            $qry = "SELECT status FROM follow WHERE follower_id = $follower_id and following_id = $following_id";
+            $result = $con->query($qry);
+            $row = $result->fetch_array();
+            return $row;
+        }
+
+        function followUser($con, $follower_id, $following_id){
+            $success = false;
+            if(self::isFollowing($con, $follower_id, $following_id)==null){
+                $qry = "INSERT INTO follow(follower_id, following_id) VALUES ($follower_id, $following_id)";
+                if($con->query($qry)==null){
+                    $success = false;
+                }else{
+                    $success = true;
+                }
+            }else{
+                $qry = "UPDATE follow SET status = true WHERE follower_id=$follower_id AND following_id=$following_id";
+                if($con->query($qry)==null){
+                    $success = false;
+                }else{
+                    $success = true;
+                }
+            }
+            return $success;
         }
     }
     

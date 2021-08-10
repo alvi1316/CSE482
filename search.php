@@ -1,10 +1,11 @@
 <?php
+  session_cache_limiter('private_no_expire');
   session_start();
   $error = false;
   $row = null;
 
   if(!isset($_SESSION["username"])){
-      header("Location: index.php");
+    header("Location: index.php");
   }
 
   if(isset($_POST["keyword"])){
@@ -120,7 +121,7 @@
             <div class="col-md-2 bg-secondary border border-dark">
               <h4 class="text-white mt-2">Option</h4>
               <a class="d-block text-white" href="feed.php">Home</a>
-              <a class="d-block text-white" href="#">Settings</a>
+              <a class="d-block text-white" href="settings.php">Settings</a>
               <a class="d-block text-white" href="logout.php">Logout</a>
             </div>
 

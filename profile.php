@@ -2,6 +2,7 @@
   session_start();
   $error = false;
   $userInfo = null;
+  $followBtn = null;
 
   if(!isset($_SESSION["username"])){
       header("Location: index.php");
@@ -17,6 +18,24 @@
 
     $userInfo = $dbmanager->getProfileUser($con, $_GET["profilename"]);
 
+    if($userInfo==null){
+      $error = true;
+    }
+
+    if(strcmp($_GET["profilename"],$_SESSION["username"])!=0 && !$error){
+      $following_id = $dbmanager->getUserId($con, $_GET["profilename"]);
+      $row = $dbmanager->isFollowing($con, $_SESSION["u_id"], $following_id);
+      if($row==null){
+        $followBtn = "Follow";
+      }else{
+        if($row["status"]==1){
+          $followBtn = "Following";
+        }else{
+          $followBtn = "Follow";
+        }
+      }
+    }
+
   }else{
     $error = true;
   }
@@ -29,6 +48,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="CSS/profile.css">
@@ -97,9 +117,9 @@
   <body>
     <nav class="navbar navbar-dark bg-dark">
       <span class="navbar-brand mb-0 h1">Potato Rotato</span>
-      <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0">Search</button>
+      <form action="search.php" method="post" class="form-inline my-2 my-lg-0">
+        <input name="keyword" class="form-control mr-sm-2" type="search" placeholder="Search">
+        <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Search</button>
       </form>
     </nav>
 
@@ -159,7 +179,13 @@
                         <p class='d-inline'>Followers</p>
                         <img src='images/post/follower.png' alt='follower' style='width: 25px; height: 25px;'>
                         <p class='d-inline'>".$userInfo["followers"]."</p>
-                        <button class='btn btn-outline-primary my-2 my-sm-0 float-right'>Follow</button>
+                  ");
+                  if($followBtn!=null){
+                    echo("
+                      <button class='btn btn-outline-primary my-2 my-sm-0 float-right'>".$followBtn."</button>
+                    ");
+                  }                        
+                  echo("      
                       </div>
                       <div class='mb-4'>
                         <p class='d-inline'>Reader Rank:</p>
@@ -231,7 +257,7 @@
             <div class="col-md-2 bg-secondary border border-dark">
               <h4 class="text-white mt-2">Option</h4>
               <a class="d-block text-white" href="feed.php">Home</a>
-              <a class="d-block text-white" href="#">Settings</a>
+              <a class="d-block text-white" href="settings.php">Settings</a>
               <a class="d-block text-white" href="logout.php">Logout</a>
             </div>
 

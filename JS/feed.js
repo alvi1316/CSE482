@@ -53,3 +53,49 @@ function searchFollowingList2() {
         }
     }
 }
+
+
+
+$(document).ready(function(){
+    $("#postBtn").click(function(){
+        var title = $("#postTitle").val();
+        var postText = $("#postTextArea").val();
+        var error = false;
+
+        if(title == ""){
+            error = true;
+            if(!document.body.contains(document.getElementById("titleHelp"))){
+                var newDiv = createDiv("titleHelp", "form-text text-danger animate__animated animate__shakeX animate__fast", "Title cannot be empty!");
+                var oldDiv = document.getElementById("postTitle");
+                oldDiv.parentNode.insertBefore(newDiv, oldDiv.nextSibling);
+            }else{
+                $("#titleHelp").removeClass('animate__animated animate__shakeX animate__fast');
+                var wait = setTimeout(function(){
+                    $("#titleHelp").addClass('animate__animated animate__shakeX animate__fast');
+                    
+                },1);
+            }            
+        }
+        if(postText == ""){
+            error = true;
+            if(!document.body.contains(document.getElementById("postHelp"))){
+                var newDiv = createDiv("postHelp", "form-text text-danger animate__animated animate__shakeX animate__fast", "Post cannot be empty!");
+                var oldDiv = document.getElementById("postTextArea");
+                oldDiv.parentNode.insertBefore(newDiv, oldDiv.nextSibling);
+            }else{
+                $("#postHelp").removeClass('animate__animated animate__shakeX animate__fast');
+                var wait = setTimeout(function(){
+                    $("#postHelp").addClass('animate__animated animate__shakeX animate__fast');                
+                },1);
+            }  
+        }
+    })
+})
+
+function createDiv(id, cls, child){
+    var newDiv = document.createElement("small");
+    newDiv.setAttribute("id",id);
+    newDiv.setAttribute("class",cls);
+    newDiv.appendChild(document.createTextNode(child));
+    return newDiv;
+}

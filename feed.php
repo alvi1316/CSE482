@@ -18,6 +18,8 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="CSS/feed.css">    
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
     <title>Feed</title>
   </head>
@@ -69,10 +71,10 @@
             
             <div class="px-md-5 py-md-3 p-1 mb-3 border border-dark">
               <div class="form-group">
-                <label for="exampleFormControlTextarea1">Post here...</label>
-                <input class="form-control mb-2" type="search" placeholder="Title">
-                <textarea class="form-control mb-2" id="exampleFormControlTextarea1" placeholder="Start writing here" rows="3"></textarea>
-                <div class="d-flex flex-column flex-md-row justify-content-end"><button class="btn btn-success">Post</button></div>
+                <label for="postTitle">Post here...</label>
+                <input id="postTitle" class="form-control" type="search" placeholder="Title">
+                <textarea id="postTextArea" class="form-control my-2" placeholder="Start writing here" rows="3"></textarea>
+                <div class="d-flex flex-column flex-md-row justify-content-end"><button id="postBtn" class="btn btn-success">Post</button></div>
               </div>
             </div>
             
@@ -136,7 +138,8 @@
 
           <div class="col-md-2 bg-secondary border border-dark">
             <h4 class="text-white mt-2">Option</h4>
-            <a class="d-block text-white" href="#">Settings</a>
+            <a class="d-block text-white" href="profile.php?profilename=<?php echo($_SESSION["username"]);?>">Profile</a>
+            <a class="d-block text-white" href="settings.php">Settings</a>
             <a class="d-block text-white" href="logout.php">Logout</a>
           </div>
 

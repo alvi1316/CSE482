@@ -19,6 +19,7 @@
 
         if(!$error){
             $_SESSION["username"] = $_POST["username"];
+            $_SESSION["u_id"] = $dbmanager->getUserId($con, $_SESSION["username"]);
             header("Location: feed.php");
         }
         
@@ -33,7 +34,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-        <script src="JS/signup.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+        <script src="JS/signup.js"></script>       
         <title>Signup</title>
     </head>
     <body>
@@ -42,7 +44,7 @@
                 <form method="POST" action="signup.php">
                     <?php
                         if($error){
-                            echo("<legend class='text-danger'>Username or Email already exist!</legend>");
+                            echo("<legend class='text-danger animate__animated animate__shakeX animate__fast'>Username or Email already exist!</legend>");
                         }
                     ?>
                     <div class="form-group">
