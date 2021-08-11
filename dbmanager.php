@@ -65,7 +65,17 @@
 
         //Function to return search results
         function searchUser($con, $keyword){
-            $qry = "SELECT user.u_id, user.username, badge.name AS reader_badge, badge.name AS writter_badge FROM user INNER JOIN badge ON user.reader_badge=badge.b_id AND user.writter_badge=badge.b_id WHERE username LIKE '%$keyword%'";
+            $qry = "SELECT 
+            A.u_id, 
+            A.username, 
+            B.name AS reader_badge,
+            C.name AS writter_badge 
+            FROM user AS A
+            INNER JOIN badge AS B
+            ON A.reader_badge=B.b_id 
+            INNER JOIN badge AS C
+            ON A.reader_badge=C.b_id 
+            WHERE username LIKE '%$keyword%'";
             $result = $con->query($qry);
             $rows = array();
             while($row = $result->fetch_array()) {
@@ -76,12 +86,13 @@
 
         //Function to return profile user data
         function getProfileUser($con, $username){
-            $qry = "SELECT user.u_id, user.username, user.reader_rank, user.writter_rank, user.followers,badge.name AS reader_badge, badge.name AS writter_badge FROM user INNER JOIN badge ON user.reader_badge=badge.b_id AND user.writter_badge=badge.b_id WHERE username = '$username'";
+            $qry = "SELECT A.u_id, A.username, A.reader_rank, A.writter_rank, A.followers, C1.name AS reader_badge, C2.name AS writter_badge FROM user AS A INNER JOIN badge AS C1 ON A.reader_badge = C1.b_id INNER JOIN badge AS C2 ON A.writter_badge = C2.b_id WHERE username = '$username'";
             $result = $con->query($qry);
             $row = $result->fetch_array();
             return $row;
         }
 
+        //Function that returns if user is following another user
         function isFollowing($con, $follower_id, $following_id){
             $qry = "SELECT status FROM follow WHERE follower_id = $follower_id and following_id = $following_id";
             $result = $con->query($qry);
@@ -89,6 +100,7 @@
             return $row;
         }
 
+        //Function to follow a user
         function followUser($con, $follower_id, $following_id){
             $success = false;
             if(self::isFollowing($con, $follower_id, $following_id)==null){
@@ -107,6 +119,45 @@
                 }
             }
             return $success;
+        }
+
+        //Function to publish a post
+        function publishPost($con, $id, $postTitle, $postText, $count){
+
+            $success = true;
+
+            $qry = "INSERT INTO post(u_id, title, p_text, p_date, p_time, reward) VALUES ($id,'$postTitle','$postText', CURRENT_DATE(), CURRENT_TIME(), (SELECT CASE WHEN($count*0.1>10) THEN floor($count*0.1) ELSE 0 END));
+            UPDATE user SET writter_rank = writter_rank+(SELECT CASE WHEN($count*0.1>10) THEN floor($count*0.1) ELSE 0 END) WHERE u_id = $id;
+            UPDATE user SET writter_badge=(SELECT MAX(b_id) FROM badge WHERE (SELECT writter_rank FROM user WHERE u_id = $id)>=minimum_rank) WHERE u_id=$id;
+            INSERT INTO summery (u_id, s_date, total_write) VALUES($id,DATE(DATE_FORMAT(CURRENT_DATE,'%Y-%m-01')),1) ON DUPLICATE KEY UPDATE  total_write = total_write+1;";
+            
+            if($con->multi_query($qry)==null){                
+                $success = false;
+            }
+            
+            return $success;
+        }
+
+        //Function to get all post of user by id
+        function getAllUserPost($con, $id){
+            $qry = "SELECT A.p_id, A.u_id, A.title,A.p_text,A.p_date,A.p_time,A.reward,A.upvote,A.downvote,A.comment,B.username FROM post AS A INNER JOIN user AS B ON A.u_id = B.u_id WHERE A.u_id = $id AND A.status = 1";
+            $result = $con->query($qry);
+            $rows = array();
+            while($row = $result->fetch_array()) {
+                $rows[] = $row;
+            }
+            return $rows;
+        }
+
+        //Fuction to get user activity by id
+        function getUserActivity($con, $id){
+            $qry = "SELECT * FROM summery WHERE u_id = $id AND YEAR(s_date) = YEAR(CURDATE())";
+            $result = $con->query($qry);
+            $rows = array();
+            while($row = $result->fetch_array()) {
+                $rows[] = $row;
+            }
+            return $rows;
         }
     }
     

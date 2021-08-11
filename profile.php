@@ -2,6 +2,9 @@
   session_start();
   $error = false;
   $userInfo = null;
+  $userPost = null;
+  $userActivity = null;
+  $chartData = null;
   $followBtn = null;
 
   if(!isset($_SESSION["username"])){
@@ -17,24 +20,48 @@
     $con = connectionSingleton::getConnection();
 
     $userInfo = $dbmanager->getProfileUser($con, $_GET["profilename"]);
+    
 
     if($userInfo==null){
       $error = true;
-    }
+    }else{
 
-    if(strcmp($_GET["profilename"],$_SESSION["username"])!=0 && !$error){
-      $following_id = $dbmanager->getUserId($con, $_GET["profilename"]);
-      $row = $dbmanager->isFollowing($con, $_SESSION["u_id"], $following_id);
-      if($row==null){
-        $followBtn = "Follow";
-      }else{
-        if($row["status"]==1){
-          $followBtn = "Following";
-        }else{
+      $userPost = $dbmanager->getAllUserPost($con, $userInfo["u_id"]);
+      $userActivity = $dbmanager->getUserActivity($con, $userInfo["u_id"]);
+      $chartData = array();
+
+      //Searching for activity the whole year and filling with 0 if null
+      for($i=1;$i<=12;$i++){
+        $chartData[$i] = array();
+        $flag = false;
+        foreach($userActivity as $activity){
+          $month = date("m",strtotime($activity["s_date"]));          
+          if(intval($month) == $i){           
+            $chartData[$i]["y_read"] = $activity["total_read"];
+            $chartData[$i]["y_write"] = $activity["total_write"];
+            $flag = true;
+            break;
+          }          
+        }
+        if(!$flag){
+          $chartData[$i]["y_read"] = 0;
+          $chartData[$i]["y_write"] = 0;
+        }        
+      }
+
+      if(strcmp($_SESSION["u_id"], $userInfo["u_id"])!=0){
+        $row = $dbmanager->isFollowing($con, $_SESSION["u_id"], $userInfo["u_id"]);
+        if($row==null){
           $followBtn = "Follow";
+        }else{
+          if($row["status"]==1){
+            $followBtn = "Following";
+          }else{
+            $followBtn = "Follow";
+          }
         }
       }
-    }
+    }  
 
   }else{
     $error = true;
@@ -72,18 +99,20 @@
                 legendText: "Written",
                 showInLegend: true, 
                 dataPoints: [
-                  {y:25, label:"Jan"},
-                  {y:5, label:"Feb"},
-                  {y:30, label:"Mar"},
-                  {y:22, label:"Apr"},
-                  {y:22, label:"May"},
-                  {y:25, label:"Jun"},
-                  {y:5, label:"Jul"},
-                  {y:30, label:"Aug"},
-                  {y:22, label:"Sep"},
-                  {y:25, label:"Oct"},
-                  {y:5, label:"Nov"},
-                  {y:22, label:"Dec"}
+                  <?php 
+                    echo("{y:".$chartData[1]["y_write"].", label:'jan'},");
+                    echo("{y:".$chartData[2]["y_write"].", label:'feb'},");
+                    echo("{y:".$chartData[3]["y_write"].", label:'mar'},");
+                    echo("{y:".$chartData[4]["y_write"].", label:'apr'},");
+                    echo("{y:".$chartData[5]["y_write"].", label:'may'},");
+                    echo("{y:".$chartData[6]["y_write"].", label:'jun'},");
+                    echo("{y:".$chartData[7]["y_write"].", label:'jul'},");
+                    echo("{y:".$chartData[8]["y_write"].", label:'aug'},");
+                    echo("{y:".$chartData[9]["y_write"].", label:'sep'},");
+                    echo("{y:".$chartData[10]["y_write"].", label:'oct'},");
+                    echo("{y:".$chartData[11]["y_write"].", label:'nov'},");
+                    echo("{y:".$chartData[12]["y_write"].", label:'dec'}");                    
+                  ?>                  
                 ]            
               },
               {
@@ -91,18 +120,21 @@
                 legendText: "Read",
                 showInLegend: true, 
                 dataPoints: [
-                  {y:6, label:"Jan"},
-                  {y:2, label:"Feb"},
-                  {y:28, label:"Mar"},
-                  {y:23, label:"Apr"},
-                  {y:25, label:"May"},
-                  {y:26, label:"Jun"},
-                  {y:8, label:"Jul"},
-                  {y:32, label:"Aug"},
-                  {y:2, label:"Sep"},
-                  {y:22, label:"Oct"},
-                  {y:12, label:"Nov"},
-                  {y:20, label:"Dec"}
+                  <?php 
+                    echo("{y:".$chartData[1]["y_read"].", label:'jan'},");
+                    echo("{y:".$chartData[2]["y_read"].", label:'feb'},");
+                    echo("{y:".$chartData[3]["y_read"].", label:'mar'},");
+                    echo("{y:".$chartData[4]["y_read"].", label:'apr'},");
+                    echo("{y:".$chartData[5]["y_read"].", label:'may'},");
+                    echo("{y:".$chartData[6]["y_read"].", label:'jun'},");
+                    echo("{y:".$chartData[7]["y_read"].", label:'jul'},");
+                    echo("{y:".$chartData[8]["y_read"].", label:'aug'},");
+                    echo("{y:".$chartData[9]["y_read"].", label:'sep'},");
+                    echo("{y:".$chartData[10]["y_read"].", label:'oct'},");
+                    echo("{y:".$chartData[11]["y_read"].", label:'nov'},");
+                    echo("{y:".$chartData[12]["y_read"].", label:'dec'}");     
+
+                  ?>
                 ]            
               }
           ]
@@ -195,62 +227,85 @@
                       <div class='border border-dark' id='chartContainer' style='height: 200px; width: 100%;'></div>             
                     </div>     
                   ");
-                }             
-              ?>                    
-              
-              <div class="px-md-5 py-md-3 p-1 mb-3 border border-dark">
-                <div>
-                  <a class="text-dark" href="#"><h5 class="d-inline">Username</h5></a>
-                  <p class="float-right">Date and Time</p>
-                </div>
-                <H4>Title</H4>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-                <div class="p-1">
-                  <img src="images/post/upvote.png" alt="upvote" style="width: 15px; height: 15px;">
-                  <p class="d-inline">26</p>
-                  <img src="images/post/downvote.png" alt="upvote" style="width: 15px; height: 15px;">
-                  <p class="d-inline">9</p>
-                  <img src="images/post/comment.png" alt="upvote" style="width: 15px; height: 15px;">
-                  <p class="d-inline">3</p>
-                  <a class="float-right" href="#">Read Post</a>
-                </div>                
-              </div>
+                }
+                if ($userPost == null){
+                  echo("
+                        <div class='row p-2 m-md-3 m-1 justify-content-center'>
+                          <h5 class='d-inline text-danger'>No Activity!</h5>
+                        </div>
+                      ");
+                }
+                foreach ($userPost as $post) {                  
+                  if($post["reward"]>0){
 
-              <div class="px-md-5 py-md-3 p-1 mb-3 border border-dark">
-                <div>
-                  <a class="text-dark" href="#"><h5 class="d-inline">Username</h5></a>
-                  <p class="float-right">Date and Time</p>
-                </div>
-                <H4>Title</H4>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-                <div class="p-1">
-                  <img src="images/post/upvote.png" alt="upvote" style="width: 15px; height: 15px;">
-                  <p class="d-inline">26</p>
-                  <img src="images/post/downvote.png" alt="upvote" style="width: 15px; height: 15px;">
-                  <p class="d-inline">9</p>
-                  <img src="images/post/comment.png" alt="upvote" style="width: 15px; height: 15px;">
-                  <p class="d-inline">3</p>
-                  <a class="float-right" href="#">Read Post</a>
-                </div>                
-              </div>
+                    $pieces = explode(" ", $post["p_text"]);
+                    $p_text = implode(" ", array_splice($pieces, 0, 100));
 
-              <div class="px-md-5 py-md-3 p-1 mb-3 border border-dark">
-                <div>
-                  <a class="text-dark" href="#"><h5 class="d-inline">Username</h5></a>
-                  <p class="float-right">Date and Time</p>
-                </div>
-                <H4>Title</H4>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-                <div class="p-1">
-                  <img src="images/post/upvote.png" alt="upvote" style="width: 15px; height: 15px;">
-                  <p class="d-inline">26</p>
-                  <img src="images/post/downvote.png" alt="upvote" style="width: 15px; height: 15px;">
-                  <p class="d-inline">9</p>
-                  <img src="images/post/comment.png" alt="upvote" style="width: 15px; height: 15px;">
-                  <p class="d-inline">3</p>
-                  <a class="float-right" href="#">Read Post</a>
-                </div>                
-              </div>
+                    echo("
+                        <div class='px-md-5 py-md-3 p-1 mb-3 border border-dark'>
+                        <div>
+                          <a class='text-dark' href='profile.php?profilename=".$post["username"]."'><h6 class='d-inline'>".$post["username"]."</h6></a>
+                          <p class='float-right'>".$post["p_date"]."&nbsp;&nbsp;&nbsp;".date('h:i a', strtotime($post["p_time"]))."</p>
+                        </div>
+                        <H4>".$post["title"]."</H4>
+                        <p>".$p_text."..."."</p>
+                        <div class='p-1'>
+                          <img src='images/post/upvote.png' alt='upvote' style='width: 15px; height: 15px;'>
+                          <p class='d-inline'>".$post["upvote"]."</p>
+                          <img src='images/post/downvote.png' alt='upvote' style='width: 15px; height: 15px;'>
+                          <p class='d-inline'>".$post["downvote"]."</p>
+                          <img src='images/post/comment.png' alt='upvote' style='width: 15px; height: 15px;'>
+                          <p class='d-inline'>".$post["comment"]."</p>
+                          <a class='float-right' href='#'>Read More</a>
+                        </div>                
+                        </div>
+                    ");
+                  }else{
+                    if(strcmp($post["username"],$_SESSION["username"])==0){
+                      echo("
+                        <div class='px-md-5 py-md-3 p-1 mb-3 border border-dark'>
+                        <div>
+                          <a class='text-dark' href='profile.php?profilename=".$post["username"]."'><h6 class='d-inline'>".$post["username"]."</h6></a>
+                          <p class='float-right'>".$post["p_date"]."&nbsp;&nbsp;&nbsp;".date('h:i a', strtotime($post["p_time"]))."</p>
+                        </div>
+                        <H4>".$post["title"]."</H4>
+                        <p>".$post["p_text"]."</p>
+                        <div class='p-1'>
+                          <button type='button' class='btn btn-sm border border-success' disabled><img src='images/post/upvote.png' alt='upvote' style='width: 15px; height: 15px;'></button>
+                          <p class='d-inline'>".$post["upvote"]."</p>
+                          <button type='button' class='btn btn-sm border border-danger' disabled><img src='images/post/downvote.png' alt='upvote' style='width: 15px; height: 15px;'></button>
+                          <p class='d-inline'>".$post["downvote"]."</p>
+                          <button type='button' class='btn btn-sm border border-warning' disabled><img src='images/post/comment.png' alt='upvote' style='width: 15px; height: 15px;'></button>
+                          <p class='d-inline'>".$post["comment"]."</p>
+                        </div>                
+                        </div>
+                      ");
+
+                    }else{
+                      echo("
+                        <div class='px-md-5 py-md-3 p-1 mb-3 border border-dark'>
+                        <div>
+                          <a class='text-dark' href='profile.php?profilename=".$post["username"]."'><h6 class='d-inline'>".$post["username"]."</h6></a>
+                          <p class='float-right'>".$post["p_date"]."&nbsp;&nbsp;&nbsp;".date('h:i a', strtotime($post["p_time"]))."</p>
+                        </div>
+                        <H4>".$post["title"]."</H4>
+                        <p>".$post["p_text"]."</p>
+                        <div class='p-1'>
+                          <button type='button' class='btn btn-sm border border-success'><img src='images/post/upvote.png' alt='upvote' style='width: 15px; height: 15px;'></button>
+                          <p class='d-inline'>".$post["upvote"]."</p>
+                          <button type='button' class='btn btn-sm border border-danger'><img src='images/post/downvote.png' alt='upvote' style='width: 15px; height: 15px;'></button>
+                          <p class='d-inline'>".$post["downvote"]."</p>
+                          <button type='button' class='btn btn-sm border border-warning'><img src='images/post/comment.png' alt='upvote' style='width: 15px; height: 15px;'></button>
+                          <p class='d-inline'>".$post["comment"]."</p>
+                        </div>                
+                        </div>
+                      ");
+                    }
+                    
+                  }
+                }                
+
+              ?>
 
             </div>
 
