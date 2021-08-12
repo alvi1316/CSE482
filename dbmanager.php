@@ -141,7 +141,8 @@
 
         //Function to get all post of user by id
         function getAllUserPost($con, $id){
-            $qry = "SELECT A.p_id, A.u_id, A.title,A.p_text,A.p_date,A.p_time,A.reward,A.upvote,A.downvote,A.comment,B.username FROM post AS A INNER JOIN user AS B ON A.u_id = B.u_id WHERE A.u_id = $id AND A.status = true ORDER BY A.p_date DESC, A.p_time DESC";
+            $userId = $_SESSION["u_id"];
+            $qry = "SELECT A.*, B.vote FROM (SELECT A.p_id, A.u_id, A.title,A.p_text,A.p_date,A.p_time,A.reward,A.upvote,A.downvote,A.comment,B.username FROM post AS A INNER JOIN user AS B ON A.u_id = B.u_id WHERE A.u_id = $id AND A.status = true) AS A LEFT JOIN (SELECT * FROM vote WHERE u_id = $userId) AS B ON A.p_id = B.p_id ORDER BY A.p_date DESC, A.p_time DESC";
             $result = $con->query($qry);
             $rows = array();
             while($row = $result->fetch_array()) {
