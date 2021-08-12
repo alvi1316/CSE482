@@ -53,3 +53,64 @@ function searchFollowingList2() {
         }
     }
 }
+
+$(document).ready(function(){
+    $(".follow-btn").click(function(){
+        var val = $(".follow-btn").text();
+        var following_id = $("#profileId").text();
+
+        if(val == "Follow"){
+
+            $.post("http://localhost/phpscript.php",
+                {
+                    type: "getid"
+                },
+                function(res, status){
+                    var data = JSON.parse(res);
+                    follower_id = data.data;
+                    $.post("http://localhost/phpscript.php",
+                        {
+                            type: "follow",
+                            follower_id: follower_id,
+                            following_id: following_id,
+
+                        },
+                        function(res, status){
+                            console.log(res);
+                            var data = JSON.parse(res);
+                            if(data.success){
+                                location.reload();
+                            }
+                        }
+                    );
+                }
+            );
+
+        }else if(val == "Unfollow"){
+            $.post("http://localhost/phpscript.php",
+                {
+                    type: "getid"
+                },
+                function(res, status){
+                    var data = JSON.parse(res);
+                    follower_id = data.data;
+                    $.post("http://localhost/phpscript.php",
+                        {
+                            type: "unfollow",
+                            follower_id: follower_id,
+                            following_id: following_id,
+
+                        },
+                        function(res, status){
+                            console.log(res);
+                            var data = JSON.parse(res);
+                            if(data.success){
+                                location.reload();
+                            }
+                        }
+                    );
+                }
+            );
+        }
+    });
+});

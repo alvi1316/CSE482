@@ -130,11 +130,9 @@ $(document).ready(function(){
                     );
                 }
             );
-
-            
         }
-    })
-})
+    });
+});
 
 function createDiv(id, cls, child){
     var newDiv = document.createElement("small");

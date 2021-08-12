@@ -54,7 +54,7 @@
         }
 
         //Function to update password
-        function updatePassword($con, $email, $password){
+        function resetPassword($con, $email, $password){
             $qry = "UPDATE user SET password = '$password' WHERE email = '$email'";
             $valid = FALSE;
             if ($con->query($qry) === TRUE) {
@@ -84,9 +84,9 @@
             return $rows;
         }
 
-        //Function to return profile user data
+        //Function to return profile user data by username
         function getProfileUser($con, $username){
-            $qry = "SELECT A.u_id, A.username, A.reader_rank, A.writter_rank, A.followers, C1.name AS reader_badge, C2.name AS writter_badge FROM user AS A INNER JOIN badge AS C1 ON A.reader_badge = C1.b_id INNER JOIN badge AS C2 ON A.writter_badge = C2.b_id WHERE username = '$username'";
+            $qry = "SELECT A.u_id, A.username, A.reader_rank, A.writter_rank, A.followers, A.email, C1.name AS reader_badge, C2.name AS writter_badge FROM user AS A INNER JOIN badge AS C1 ON A.reader_badge = C1.b_id INNER JOIN badge AS C2 ON A.writter_badge = C2.b_id WHERE username = '$username'";
             $result = $con->query($qry);
             $row = $result->fetch_array();
             return $row;
@@ -103,22 +103,23 @@
         //Function to follow a user
         function followUser($con, $follower_id, $following_id){
             $success = false;
-            if(self::isFollowing($con, $follower_id, $following_id)==null){
-                $qry = "INSERT INTO follow(follower_id, following_id) VALUES ($follower_id, $following_id)";
-                if($con->query($qry)==null){
-                    $success = false;
-                }else{
-                    $success = true;
-                }
-            }else{
-                $qry = "UPDATE follow SET status = true WHERE follower_id=$follower_id AND following_id=$following_id";
-                if($con->query($qry)==null){
-                    $success = false;
-                }else{
-                    $success = true;
-                }
+            $qry = "INSERT INTO follow(follower_id, following_id) VALUES ($follower_id,$following_id) ON DUPLICATE KEY UPDATE  status = true;
+            UPDATE user SET followers=followers+1 WHERE u_id=$following_id;";
+            if($con->multi_query($qry)!=null){
+                $success = true;
             }
-            return $success;
+            return $success;            
+        }
+
+        //Function to unfollow a user
+        function unfollowUser($con, $follower_id, $following_id){
+            $success = false;
+            $qry = "UPDATE follow SET status = false WHERE follower_id = $follower_id AND following_id = $following_id;
+            UPDATE user SET followers=followers-1 WHERE u_id=$following_id";
+            if($con->multi_query($qry)!=null){
+                $success = true;
+            }
+            return $success; 
         }
 
         //Function to publish a post
@@ -140,7 +141,7 @@
 
         //Function to get all post of user by id
         function getAllUserPost($con, $id){
-            $qry = "SELECT A.p_id, A.u_id, A.title,A.p_text,A.p_date,A.p_time,A.reward,A.upvote,A.downvote,A.comment,B.username FROM post AS A INNER JOIN user AS B ON A.u_id = B.u_id WHERE A.u_id = $id AND A.status = 1";
+            $qry = "SELECT A.p_id, A.u_id, A.title,A.p_text,A.p_date,A.p_time,A.reward,A.upvote,A.downvote,A.comment,B.username FROM post AS A INNER JOIN user AS B ON A.u_id = B.u_id WHERE A.u_id = $id AND A.status = 1 ORDER BY A.p_date DESC, A.p_time DESC";
             $result = $con->query($qry);
             $rows = array();
             while($row = $result->fetch_array()) {
@@ -158,6 +159,47 @@
                 $rows[] = $row;
             }
             return $rows;
+        }
+
+        //Function to get all following list
+        function getFollowingList($con, $id){
+            $qry = "SELECT A.username FROM user AS A INNER JOIN (SELECT following_id FROM follow WHERE follower_id = $id) AS B ON A.u_id = B.following_id";
+            $result = $con->query($qry);
+            $rows = array();
+            while($row = $result->fetch_array()) {
+                $rows[] = $row;
+            }
+            return $rows;
+        }
+
+        //Function update username by id
+        function updateUsername($con, $id, $newUsername){
+            $success = false;
+            $qry = "UPDATE user SET username='$newUsername' WHERE u_id = $id";
+            if($con->query($qry)!=null){
+                $success = true;
+            }
+            return $success; 
+        }
+
+        //Function update email by id
+        function updateEmail($con, $id, $newUsername){
+            $success = false;
+            $qry = "UPDATE user SET email='$newUsername' WHERE u_id = $id";
+            if($con->query($qry)!=null){
+                $success = true;
+            }
+            return $success; 
+        }
+
+        //Function update Password by id
+        function updatePassword($con, $id, $newUsername){
+            $success = false;
+            $qry = "UPDATE user SET password='$newUsername' WHERE u_id = $id";
+            if($con->query($qry)!=null){
+                $success = true;
+            }
+            return $success; 
         }
     }
     

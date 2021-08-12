@@ -20,6 +20,10 @@
             $dbmanager = new dbmanager();        
             $con = connectionSingleton::getConnection();
             $response["success"] = $dbmanager->followUser($con, $_POST["follower_id"], $_POST["following_id"]);            
+        }else if(strcmp($type, "unfollow")==0 && isset($_POST["follower_id"]) && isset($_POST["following_id"])){
+            $dbmanager = new dbmanager();        
+            $con = connectionSingleton::getConnection();
+            $response["success"] = $dbmanager->unfollowUser($con, $_POST["follower_id"], $_POST["following_id"]);
         }else if(strcmp($type, "publishPost")==0 && isset($_POST["u_id"]) && isset($_POST["postTitle"]) && isset($_POST["postText"]) && isset($_POST["count"])){
             $dbmanager = new dbmanager();        
             $con = connectionSingleton::getConnection();

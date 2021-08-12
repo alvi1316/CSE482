@@ -4,6 +4,12 @@
   if(!isset($_SESSION["username"])){
     header("Location: index.php");
   }
+  require_once('dbmanager.php');
+  require_once('connectionsingleton.php');
+  $dbmanager = new dbmanager();        
+  $con = connectionSingleton::getConnection();
+  $followList = $dbmanager->getFollowingList($con, $_SESSION["u_id"]);
+  $userInfo = $dbmanager->getProfileUser($con, $_SESSION["username"]); 
 ?>
 
 <!doctype html>
@@ -13,6 +19,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="CSS/settings.css">
@@ -33,13 +40,11 @@
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>        
       <input id="searchFollowing1" onkeyup="searchFollowingList1()" class="form-control mr-sm-2" type="search" placeholder="Search following list">  
       <div id="followList1">
-        <a class="d-block text-nowrap text-white" href="#">Alvi</a>
-        <a class="d-block text-nowrap text-white" href="#">Mahin</a>
-        <a class="d-block text-nowrap text-white" href="#">Alin</a>
-        <a class="d-block text-nowrap text-white" href="#">Adiba</a>
-        <a class="d-block text-nowrap text-white" href="#">Srv</a>
-        <a class="d-block text-nowrap text-white" href="#">Sanjida</a>
-        <a class="d-block text-nowrap text-white" href="#">Mim</a>
+        <?php
+          foreach($followList as $follow){
+            echo("<a class='d-block text-nowrap text-white' href='profile.php?profilename=".$follow["username"]."'>".$follow["username"]."</a>");
+          }
+        ?>  
       </div>      
     </div>  
 
@@ -50,13 +55,11 @@
               <h4 class="text-white mt-2">Following</h4>
               <input id="searchFollowing2" onkeyup="searchFollowingList2()" class="form-control mr-sm-2" type="search" placeholder="Search following list">
               <div id="followList2">                
-                <a class="d-block text-nowrap text-white" href="#">Alvi</a>
-                <a class="d-block text-nowrap text-white" href="#">Mahin</a>
-                <a class="d-block text-nowrap text-white" href="#">Alin</a>
-                <a class="d-block text-nowrap text-white" href="#">Adiba</a>
-                <a class="d-block text-nowrap text-white" href="#">Srv</a>
-                <a class="d-block text-nowrap text-white" href="#">Sanjida</a>
-                <a class="d-block text-nowrap text-white" href="#">Mim</a>            
+                <?php
+                  foreach($followList as $follow){
+                    echo("<a class='d-block text-nowrap text-white' href='profile.php?profilename=".$follow["username"]."'>".$follow["username"]."</a>");
+                  }
+                ?>              
               </div>
           </div>
 
@@ -67,22 +70,23 @@
             <div class="border border-dark mt-3 p-5">
             
               <div class="col">
-
+                
                 <div class="row mb-4">
                   <div class="col-md-3">
                     <h5 class="d-inline">Username:</h5>
                   </div>   
                   <div id="usernameText" class="col-md-6">
-                    <h5 class="d-inline">username</h5>
+                    <h5 class="d-inline"><?php echo($_SESSION["username"]); ?></h5>
                   </div>                  
                   <div id="usernameInput" class="col-md-6 d-none">
-                    <input type="text" class="form-control" value="username">
+                    <input type="text" class="form-control" placeholder="<?php echo($_SESSION["username"]); ?>">
+                    <small class='text-danger'>Username has to be atleast 6 characters long!</small>
                   </div>
                   <div id="usernameEditBtn" class="col-md-1">
-                    <button onclick="usernameEditClick()" class="btn btn-sm btn-info">Edit</button>
+                    <button id="usernameEdit" class="btn btn-sm btn-info">Edit</button>
                   </div>
                   <div id="usernameSaveBtn" class="col-md-1 d-none">
-                    <button onclick="usernameSaveClick()" class="btn btn-sm btn-info">Save</button>
+                    <button id="usernameSave" class="btn btn-sm btn-info">Save</button>
                   </div>
                 </div>
   
@@ -94,13 +98,14 @@
                     <h5 class="d-inline">********</h5>
                   </div>                  
                   <div id="passwordInput" class="col-md-6 d-none">
-                    <input type="password" class="form-control" value="........">
+                    <input type="password" class="form-control" placeholder="********">
+                    <small class='text-danger'>Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.</small>
                   </div>
                   <div id="passwordEditBtn" class="col-md-1">
-                    <button onclick="passwordEditClick()" class="btn btn-sm btn-info">Edit</button>
+                    <button id="passwordEdit" class="btn btn-sm btn-info">Edit</button>
                   </div>
                   <div id="passwordSaveBtn" class="col-md-1 d-none">
-                    <button onclick="passwordSaveClick()" class="btn btn-sm btn-info">Save</button>
+                    <button id="passwordSave" class="btn btn-sm btn-info">Save</button>
                   </div>
                 </div>
 
@@ -109,16 +114,17 @@
                     <h5 class="d-inline">Email:</h5>
                   </div>   
                   <div id="emailText" class="col-md-6">
-                    <h5 class="d-inline">potato@tomato.com</h5>
+                    <h5 class="d-inline"><?php echo($userInfo["email"]); ?></h5>
                   </div>                  
                   <div id="emailInput" class="col-md-6 d-none">
-                    <input type="text" class="form-control" value="potato@tomato.com">
+                    <input type="text" class="form-control" placeholder="<?php echo($userInfo["email"]); ?>">
+                    <small class='text-danger'>Enter a valid email!</small>
                   </div>
                   <div id="emailEditBtn" class="col-md-1">
-                    <button onclick="emailEditClick()" class="btn btn-sm btn-info">Edit</button>
+                    <button id="emailEdit" class="btn btn-sm btn-info">Edit</button>
                   </div>
                   <div id="emailSaveBtn" class="col-md-1 d-none">
-                    <button onclick="emailSaveClick()" class="btn btn-sm btn-info">Save</button>
+                    <button id="emailSave" class="btn btn-sm btn-info">Save</button>
                   </div>
                 </div>
                 
@@ -140,6 +146,7 @@
 
           <div class="col-md-2 bg-secondary border border-dark">
             <h4 class="text-white mt-2">Option</h4>
+            <a class="d-block text-white" href="profile.php?profilename=<?php echo($_SESSION["username"]);?>"><?php echo($_SESSION["username"]);?></a>
             <a class="d-block text-white" href="feed.php">Home</a>
             <a class="d-block text-white" href="logout.php">Logout</a>
           </div>
@@ -150,7 +157,7 @@
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="JS/settings.js"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>

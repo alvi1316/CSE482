@@ -4,6 +4,7 @@
   $userInfo = null;
   $userPost = null;
   $userActivity = null;
+  $followList = null;
   $chartData = null;
   $followBtn = null;
 
@@ -11,16 +12,15 @@
       header("Location: index.php");
   }
 
-  if(isset($_GET["profilename"])){
-    require_once('dbmanager.php');
-    require_once('connectionsingleton.php');
+  require_once('dbmanager.php');
+  require_once('connectionsingleton.php');
+  $dbmanager = new dbmanager();
+  $con = connectionSingleton::getConnection();
+  $followList = $dbmanager->getFollowingList($con, $_SESSION["u_id"]);
+  
+  if(isset($_GET["profilename"])){    
 
-    $dbmanager = new dbmanager();
-        
-    $con = connectionSingleton::getConnection();
-
-    $userInfo = $dbmanager->getProfileUser($con, $_GET["profilename"]);
-    
+    $userInfo = $dbmanager->getProfileUser($con, $_GET["profilename"]);   
 
     if($userInfo==null){
       $error = true;
@@ -55,7 +55,7 @@
           $followBtn = "Follow";
         }else{
           if($row["status"]==1){
-            $followBtn = "Following";
+            $followBtn = "Unfollow";
           }else{
             $followBtn = "Follow";
           }
@@ -100,18 +100,21 @@
                 showInLegend: true, 
                 dataPoints: [
                   <?php 
-                    echo("{y:".$chartData[1]["y_write"].", label:'jan'},");
-                    echo("{y:".$chartData[2]["y_write"].", label:'feb'},");
-                    echo("{y:".$chartData[3]["y_write"].", label:'mar'},");
-                    echo("{y:".$chartData[4]["y_write"].", label:'apr'},");
-                    echo("{y:".$chartData[5]["y_write"].", label:'may'},");
-                    echo("{y:".$chartData[6]["y_write"].", label:'jun'},");
-                    echo("{y:".$chartData[7]["y_write"].", label:'jul'},");
-                    echo("{y:".$chartData[8]["y_write"].", label:'aug'},");
-                    echo("{y:".$chartData[9]["y_write"].", label:'sep'},");
-                    echo("{y:".$chartData[10]["y_write"].", label:'oct'},");
-                    echo("{y:".$chartData[11]["y_write"].", label:'nov'},");
-                    echo("{y:".$chartData[12]["y_write"].", label:'dec'}");                    
+                    if(!$error){
+                      echo("{y:".$chartData[1]["y_write"].", label:'jan'},");
+                      echo("{y:".$chartData[2]["y_write"].", label:'feb'},");
+                      echo("{y:".$chartData[3]["y_write"].", label:'mar'},");
+                      echo("{y:".$chartData[4]["y_write"].", label:'apr'},");
+                      echo("{y:".$chartData[5]["y_write"].", label:'may'},");
+                      echo("{y:".$chartData[6]["y_write"].", label:'jun'},");
+                      echo("{y:".$chartData[7]["y_write"].", label:'jul'},");
+                      echo("{y:".$chartData[8]["y_write"].", label:'aug'},");
+                      echo("{y:".$chartData[9]["y_write"].", label:'sep'},");
+                      echo("{y:".$chartData[10]["y_write"].", label:'oct'},");
+                      echo("{y:".$chartData[11]["y_write"].", label:'nov'},");
+                      echo("{y:".$chartData[12]["y_write"].", label:'dec'}");  
+                    }
+                                      
                   ?>                  
                 ]            
               },
@@ -121,26 +124,32 @@
                 showInLegend: true, 
                 dataPoints: [
                   <?php 
-                    echo("{y:".$chartData[1]["y_read"].", label:'jan'},");
-                    echo("{y:".$chartData[2]["y_read"].", label:'feb'},");
-                    echo("{y:".$chartData[3]["y_read"].", label:'mar'},");
-                    echo("{y:".$chartData[4]["y_read"].", label:'apr'},");
-                    echo("{y:".$chartData[5]["y_read"].", label:'may'},");
-                    echo("{y:".$chartData[6]["y_read"].", label:'jun'},");
-                    echo("{y:".$chartData[7]["y_read"].", label:'jul'},");
-                    echo("{y:".$chartData[8]["y_read"].", label:'aug'},");
-                    echo("{y:".$chartData[9]["y_read"].", label:'sep'},");
-                    echo("{y:".$chartData[10]["y_read"].", label:'oct'},");
-                    echo("{y:".$chartData[11]["y_read"].", label:'nov'},");
-                    echo("{y:".$chartData[12]["y_read"].", label:'dec'}");     
+                    if(!$error){
+                      echo("{y:".$chartData[1]["y_read"].", label:'jan'},");
+                      echo("{y:".$chartData[2]["y_read"].", label:'feb'},");
+                      echo("{y:".$chartData[3]["y_read"].", label:'mar'},");
+                      echo("{y:".$chartData[4]["y_read"].", label:'apr'},");
+                      echo("{y:".$chartData[5]["y_read"].", label:'may'},");
+                      echo("{y:".$chartData[6]["y_read"].", label:'jun'},");
+                      echo("{y:".$chartData[7]["y_read"].", label:'jul'},");
+                      echo("{y:".$chartData[8]["y_read"].", label:'aug'},");
+                      echo("{y:".$chartData[9]["y_read"].", label:'sep'},");
+                      echo("{y:".$chartData[10]["y_read"].", label:'oct'},");
+                      echo("{y:".$chartData[11]["y_read"].", label:'nov'},");
+                      echo("{y:".$chartData[12]["y_read"].", label:'dec'}");
+                    }  
 
                   ?>
                 ]            
               }
           ]
         });
-
-        chart.render();       
+        <?php
+          if(!$error){
+            echo "chart.render();";
+          }
+        ?>
+               
       }
     </script>
 
@@ -160,13 +169,11 @@
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>        
       <input id="searchFollowing1" onkeyup="searchFollowingList1()" class="form-control mr-sm-2" type="search" placeholder="Search following list">  
       <div id="followList1">
-        <a class="d-block text-nowrap text-white" href="#">Alvi</a>
-        <a class="d-block text-nowrap text-white" href="#">Mahin</a>
-        <a class="d-block text-nowrap text-white" href="#">Alin</a>
-        <a class="d-block text-nowrap text-white" href="#">Adiba</a>
-        <a class="d-block text-nowrap text-white" href="#">Srv</a>
-        <a class="d-block text-nowrap text-white" href="#">Sanjida</a>
-        <a class="d-block text-nowrap text-white" href="#">Mim</a>
+        <?php
+          foreach($followList as $follow){
+            echo("<a class='d-block text-nowrap text-white' href='profile.php?profilename=".$follow["username"]."'>".$follow["username"]."</a>");
+          }
+        ?> 
       </div>
       
       
@@ -179,13 +186,11 @@
                 <h4 class="text-white mt-2">Following</h4>
                 <input id="searchFollowing2" onkeyup="searchFollowingList2()" class="form-control mr-sm-2" type="search" placeholder="Search following list">
                 <div id="followList2">                
-                  <a class="d-block text-nowrap text-white" href="#">Alvi</a>
-                  <a class="d-block text-nowrap text-white" href="#">Mahin</a>
-                  <a class="d-block text-nowrap text-white" href="#">Alin</a>
-                  <a class="d-block text-nowrap text-white" href="#">Adiba</a>
-                  <a class="d-block text-nowrap text-white" href="#">Srv</a>
-                  <a class="d-block text-nowrap text-white" href="#">Sanjida</a>
-                  <a class="d-block text-nowrap text-white" href="#">Mim</a>            
+                  <?php
+                    foreach($followList as $follow){
+                      echo("<a class='d-block text-nowrap text-white' href='profile.php?profilename=".$follow["username"]."'>".$follow["username"]."</a>");
+                    }
+                  ?>             
                 </div>
             </div>
 
@@ -204,6 +209,7 @@
                   echo("
                     <div class='mt-md-3 mb-3 p-sm-5 p-1 border border-dark' style='height: 450px;'>
                       <h5 class='mb-3'>".$userInfo["username"]."</h5>
+                      <p id='profileId' hidden>".$userInfo["u_id"]."</p>
                       <div class='mb-1'>
                         <p class='d-inline'>Writter Rank:</p>
                         <img class='mr-5' src='images/rank/".$userInfo["writter_badge"].".png' alt='".$userInfo["writter_badge"]."' style='width: 40px; height: 40px;'>
@@ -214,7 +220,7 @@
                   ");
                   if($followBtn!=null){
                     echo("
-                      <button class='btn btn-outline-primary my-2 my-sm-0 float-right'>".$followBtn."</button>
+                      <button class='btn btn-outline-primary my-2 my-sm-0 float-right follow-btn'>".$followBtn."</button>
                     ");
                   }                        
                   echo("      
@@ -227,83 +233,86 @@
                       <div class='border border-dark' id='chartContainer' style='height: 200px; width: 100%;'></div>             
                     </div>     
                   ");
-                }
-                if ($userPost == null){
-                  echo("
-                        <div class='row p-2 m-md-3 m-1 justify-content-center'>
-                          <h5 class='d-inline text-danger'>No Activity!</h5>
-                        </div>
-                      ");
-                }
-                foreach ($userPost as $post) {                  
-                  if($post["reward"]>0){
-
-                    $pieces = explode(" ", $post["p_text"]);
-                    $p_text = implode(" ", array_splice($pieces, 0, 100));
-
+                  if ($userPost == null && strcmp($followBtn,"Follow")!=0){
                     echo("
-                        <div class='px-md-5 py-md-3 p-1 mb-3 border border-dark'>
-                        <div>
-                          <a class='text-dark' href='profile.php?profilename=".$post["username"]."'><h6 class='d-inline'>".$post["username"]."</h6></a>
-                          <p class='float-right'>".$post["p_date"]."&nbsp;&nbsp;&nbsp;".date('h:i a', strtotime($post["p_time"]))."</p>
-                        </div>
-                        <H4>".$post["title"]."</H4>
-                        <p>".$p_text."..."."</p>
-                        <div class='p-1'>
-                          <img src='images/post/upvote.png' alt='upvote' style='width: 15px; height: 15px;'>
-                          <p class='d-inline'>".$post["upvote"]."</p>
-                          <img src='images/post/downvote.png' alt='upvote' style='width: 15px; height: 15px;'>
-                          <p class='d-inline'>".$post["downvote"]."</p>
-                          <img src='images/post/comment.png' alt='upvote' style='width: 15px; height: 15px;'>
-                          <p class='d-inline'>".$post["comment"]."</p>
-                          <a class='float-right' href='#'>Read More</a>
-                        </div>                
-                        </div>
-                    ");
-                  }else{
-                    if(strcmp($post["username"],$_SESSION["username"])==0){
-                      echo("
-                        <div class='px-md-5 py-md-3 p-1 mb-3 border border-dark'>
-                        <div>
-                          <a class='text-dark' href='profile.php?profilename=".$post["username"]."'><h6 class='d-inline'>".$post["username"]."</h6></a>
-                          <p class='float-right'>".$post["p_date"]."&nbsp;&nbsp;&nbsp;".date('h:i a', strtotime($post["p_time"]))."</p>
-                        </div>
-                        <H4>".$post["title"]."</H4>
-                        <p>".$post["p_text"]."</p>
-                        <div class='p-1'>
-                          <button type='button' class='btn btn-sm border border-success' disabled><img src='images/post/upvote.png' alt='upvote' style='width: 15px; height: 15px;'></button>
-                          <p class='d-inline'>".$post["upvote"]."</p>
-                          <button type='button' class='btn btn-sm border border-danger' disabled><img src='images/post/downvote.png' alt='upvote' style='width: 15px; height: 15px;'></button>
-                          <p class='d-inline'>".$post["downvote"]."</p>
-                          <button type='button' class='btn btn-sm border border-warning' disabled><img src='images/post/comment.png' alt='upvote' style='width: 15px; height: 15px;'></button>
-                          <p class='d-inline'>".$post["comment"]."</p>
-                        </div>                
-                        </div>
-                      ");
-
-                    }else{
-                      echo("
-                        <div class='px-md-5 py-md-3 p-1 mb-3 border border-dark'>
-                        <div>
-                          <a class='text-dark' href='profile.php?profilename=".$post["username"]."'><h6 class='d-inline'>".$post["username"]."</h6></a>
-                          <p class='float-right'>".$post["p_date"]."&nbsp;&nbsp;&nbsp;".date('h:i a', strtotime($post["p_time"]))."</p>
-                        </div>
-                        <H4>".$post["title"]."</H4>
-                        <p>".$post["p_text"]."</p>
-                        <div class='p-1'>
-                          <button type='button' class='btn btn-sm border border-success'><img src='images/post/upvote.png' alt='upvote' style='width: 15px; height: 15px;'></button>
-                          <p class='d-inline'>".$post["upvote"]."</p>
-                          <button type='button' class='btn btn-sm border border-danger'><img src='images/post/downvote.png' alt='upvote' style='width: 15px; height: 15px;'></button>
-                          <p class='d-inline'>".$post["downvote"]."</p>
-                          <button type='button' class='btn btn-sm border border-warning'><img src='images/post/comment.png' alt='upvote' style='width: 15px; height: 15px;'></button>
-                          <p class='d-inline'>".$post["comment"]."</p>
-                        </div>                
-                        </div>
-                      ");
-                    }
-                    
+                          <div class='row p-2 m-md-3 m-1 justify-content-center'>
+                            <h5 class='d-inline text-danger'>No Activity!</h5>
+                          </div>
+                        ");
                   }
-                }                
+                  if(strcmp($followBtn,"Follow")!=0){
+                    foreach ($userPost as $post) {                  
+                      if($post["reward"]>0){
+    
+                        $pieces = explode(" ", $post["p_text"]);
+                        $p_text = implode(" ", array_splice($pieces, 0, 100));
+    
+                        echo("
+                            <div class='px-md-5 py-md-3 p-1 mb-3 border border-dark'>
+                            <div>
+                              <a class='text-dark' href='profile.php?profilename=".$post["username"]."'><h6 class='d-inline'>".$post["username"]."</h6></a>
+                              <p class='float-right'>".$post["p_date"]."&nbsp;&nbsp;&nbsp;".date('h:i a', strtotime($post["p_time"]))."</p>
+                            </div>
+                            <H4>".$post["title"]."</H4>
+                            <p>".$p_text."..."."</p>
+                            <div class='p-1'>
+                              <img src='images/post/upvote.png' alt='upvote' style='width: 15px; height: 15px;'>
+                              <p class='d-inline'>".$post["upvote"]."</p>
+                              <img src='images/post/downvote.png' alt='upvote' style='width: 15px; height: 15px;'>
+                              <p class='d-inline'>".$post["downvote"]."</p>
+                              <img src='images/post/comment.png' alt='upvote' style='width: 15px; height: 15px;'>
+                              <p class='d-inline'>".$post["comment"]."</p>
+                              <a class='float-right' href='#'>Read More</a>
+                            </div>                
+                            </div>
+                        ");
+                      }else{
+                        if(strcmp($post["username"],$_SESSION["username"])==0){
+                          echo("
+                            <div class='px-md-5 py-md-3 p-1 mb-3 border border-dark'>
+                            <div>
+                              <a class='text-dark' href='profile.php?profilename=".$post["username"]."'><h6 class='d-inline'>".$post["username"]."</h6></a>
+                              <p class='float-right'>".$post["p_date"]."&nbsp;&nbsp;&nbsp;".date('h:i a', strtotime($post["p_time"]))."</p>
+                            </div>
+                            <H4>".$post["title"]."</H4>
+                            <p>".$post["p_text"]."</p>
+                            <div class='p-1'>
+                              <button type='button' class='btn btn-sm border border-success' disabled><img src='images/post/upvote.png' alt='upvote' style='width: 15px; height: 15px;'></button>
+                              <p class='d-inline'>".$post["upvote"]."</p>
+                              <button type='button' class='btn btn-sm border border-danger' disabled><img src='images/post/downvote.png' alt='upvote' style='width: 15px; height: 15px;'></button>
+                              <p class='d-inline'>".$post["downvote"]."</p>
+                              <button type='button' class='btn btn-sm border border-warning'><img src='images/post/comment.png' alt='upvote' style='width: 15px; height: 15px;'></button>
+                              <p class='d-inline'>".$post["comment"]."</p>
+                            </div>                
+                            </div>
+                          ");
+    
+                        }else{
+                          echo("
+                            <div class='px-md-5 py-md-3 p-1 mb-3 border border-dark'>
+                            <div>
+                              <a class='text-dark' href='profile.php?profilename=".$post["username"]."'><h6 class='d-inline'>".$post["username"]."</h6></a>
+                              <p class='float-right'>".$post["p_date"]."&nbsp;&nbsp;&nbsp;".date('h:i a', strtotime($post["p_time"]))."</p>
+                            </div>
+                            <H4>".$post["title"]."</H4>
+                            <p>".$post["p_text"]."</p>
+                            <div class='p-1'>
+                              <button type='button' class='btn btn-sm border border-success'><img src='images/post/upvote.png' alt='upvote' style='width: 15px; height: 15px;'></button>
+                              <p class='d-inline'>".$post["upvote"]."</p>
+                              <button type='button' class='btn btn-sm border border-danger'><img src='images/post/downvote.png' alt='upvote' style='width: 15px; height: 15px;'></button>
+                              <p class='d-inline'>".$post["downvote"]."</p>
+                              <button type='button' class='btn btn-sm border border-warning'><img src='images/post/comment.png' alt='upvote' style='width: 15px; height: 15px;'></button>
+                              <p class='d-inline'>".$post["comment"]."</p>
+                            </div>                
+                            </div>
+                          ");
+                        }
+                      }
+                    }                    
+                  }
+                }
+                
+                                
 
               ?>
 
@@ -322,7 +331,7 @@
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="JS/profile.js"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>

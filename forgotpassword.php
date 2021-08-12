@@ -22,7 +22,7 @@
             require_once('helper.php');
             $m = new Helper();
             $newPass = $m->generateNewPassword();
-            if($dbmanager->updatePassword($con, $_POST["email"], $newPass)){
+            if($dbmanager->resetPassword($con, $_POST["email"], $newPass)){
                 $sent = $m->sendNewPassword($_POST["email"],$newPass);
             }            
         }

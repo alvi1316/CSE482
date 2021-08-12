@@ -5,6 +5,12 @@
       header("Location: index.php");
   }
 
+  require_once('dbmanager.php');
+  require_once('connectionsingleton.php');
+
+  $dbmanager = new dbmanager();
+  $con = connectionSingleton::getConnection();
+  $followList = $dbmanager->getFollowingList($con, $_SESSION["u_id"]);
 ?>
 
 
@@ -37,13 +43,11 @@
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>        
       <input id="searchFollowing1" onkeyup="searchFollowingList1()" class="form-control mr-sm-2" type="search" placeholder="Search following list">  
       <div id="followList1">
-        <a class="d-block text-nowrap text-white" href="#">Alvi</a>
-        <a class="d-block text-nowrap text-white" href="#">Mahin</a>
-        <a class="d-block text-nowrap text-white" href="#">Alin</a>
-        <a class="d-block text-nowrap text-white" href="#">Adiba</a>
-        <a class="d-block text-nowrap text-white" href="#">Srv</a>
-        <a class="d-block text-nowrap text-white" href="#">Sanjida</a>
-        <a class="d-block text-nowrap text-white" href="#">Mim</a>
+        <?php
+          foreach($followList as $follow){
+            echo("<a class='d-block text-nowrap text-white' href='profile.php?profilename=".$follow["username"]."'>".$follow["username"]."</a>");
+          }
+        ?>        
       </div>      
       
     </div>  
@@ -55,13 +59,11 @@
               <h4 class="text-white mt-2">Following</h4>
               <input id="searchFollowing2" onkeyup="searchFollowingList2()" class="form-control mr-sm-2" type="search" placeholder="Search following list">
               <div id="followList2">                
-                <a class="d-block text-nowrap text-white" href="#">Alvi</a>
-                <a class="d-block text-nowrap text-white" href="#">Mahin</a>
-                <a class="d-block text-nowrap text-white" href="#">Alin</a>
-                <a class="d-block text-nowrap text-white" href="#">Adiba</a>
-                <a class="d-block text-nowrap text-white" href="#">Srv</a>
-                <a class="d-block text-nowrap text-white" href="#">Sanjida</a>
-                <a class="d-block text-nowrap text-white" href="#">Mim</a>            
+                <?php
+                  foreach($followList as $follow){
+                    echo("<a class='d-block text-nowrap text-white' href='profile.php?profilename=".$follow["username"]."'>".$follow["username"]."</a>");
+                  }
+                ?>             
               </div>
           </div>
           
@@ -138,7 +140,7 @@
 
           <div class="col-md-2 bg-secondary border border-dark">
             <h4 class="text-white mt-2">Option</h4>
-            <a class="d-block text-white" href="profile.php?profilename=<?php echo($_SESSION["username"]);?>">Profile</a>
+            <a class="d-block text-white" href="profile.php?profilename=<?php echo($_SESSION["username"]);?>"><?php echo($_SESSION["username"]);?></a>
             <a class="d-block text-white" href="settings.php">Settings</a>
             <a class="d-block text-white" href="logout.php">Logout</a>
           </div>
