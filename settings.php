@@ -23,15 +23,16 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="CSS/settings.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>  
     
     <title>Settings</title>
   </head>
   <body>
     <nav class="navbar navbar-dark bg-dark">
       <span class="navbar-brand mb-0 h1">Writer's Vlog</span>
-      <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0">Search</button>
+      <form action="search.php" method="post" class="form-inline my-2 my-lg-0">
+        <input name="keyword" class="form-control mr-sm-2" type="search" placeholder="Search">
+        <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Search</button>
       </form>
     </nav>
 
@@ -79,33 +80,13 @@
                     <h5 class="d-inline"><?php echo($_SESSION["username"]); ?></h5>
                   </div>                  
                   <div id="usernameInput" class="col-md-6 d-none">
-                    <input type="text" class="form-control" placeholder="<?php echo($_SESSION["username"]); ?>">
-                    <small class='text-danger'>Username has to be atleast 6 characters long!</small>
+                    <input id="username" type="text" class="form-control" placeholder="<?php echo($_SESSION["username"]); ?>">
                   </div>
                   <div id="usernameEditBtn" class="col-md-1">
                     <button id="usernameEdit" class="btn btn-sm btn-info">Edit</button>
                   </div>
                   <div id="usernameSaveBtn" class="col-md-1 d-none">
                     <button id="usernameSave" class="btn btn-sm btn-info">Save</button>
-                  </div>
-                </div>
-  
-                <div class="row mb-4">
-                  <div class="col-md-3">
-                    <h5 class="d-inline">Password:</h5>
-                  </div>   
-                  <div id="passwordText" class="col-md-6">
-                    <h5 class="d-inline">********</h5>
-                  </div>                  
-                  <div id="passwordInput" class="col-md-6 d-none">
-                    <input type="password" class="form-control" placeholder="********">
-                    <small class='text-danger'>Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.</small>
-                  </div>
-                  <div id="passwordEditBtn" class="col-md-1">
-                    <button id="passwordEdit" class="btn btn-sm btn-info">Edit</button>
-                  </div>
-                  <div id="passwordSaveBtn" class="col-md-1 d-none">
-                    <button id="passwordSave" class="btn btn-sm btn-info">Save</button>
                   </div>
                 </div>
 
@@ -117,8 +98,7 @@
                     <h5 class="d-inline"><?php echo($userInfo["email"]); ?></h5>
                   </div>                  
                   <div id="emailInput" class="col-md-6 d-none">
-                    <input type="text" class="form-control" placeholder="<?php echo($userInfo["email"]); ?>">
-                    <small class='text-danger'>Enter a valid email!</small>
+                    <input id="email" type="text" class="form-control" placeholder="<?php echo($userInfo["email"]); ?>">  
                   </div>
                   <div id="emailEditBtn" class="col-md-1">
                     <button id="emailEdit" class="btn btn-sm btn-info">Edit</button>
@@ -127,10 +107,28 @@
                     <button id="emailSave" class="btn btn-sm btn-info">Save</button>
                   </div>
                 </div>
+  
+                <div class="row mb-4">
+                  <div class="col-md-3">
+                    <h5 class="d-inline">Password:</h5>
+                  </div>   
+                  <div id="passwordText" class="col-md-6">
+                    <h5 class="d-inline">********</h5>
+                  </div>                  
+                  <div id="passwordInput" class="col-md-6 d-none">
+                    <input id="password" type="password" class="form-control" placeholder="********">
+                  </div>
+                  <div id="passwordEditBtn" class="col-md-1">
+                    <button id="passwordEdit" class="btn btn-sm btn-info">Edit</button>
+                  </div>
+                  <div id="passwordSaveBtn" class="col-md-1 d-none">
+                    <button id="passwordSave" class="btn btn-sm btn-info">Save</button>
+                  </div>
+                </div>                
                 
                 <div class="row">  
                   <div class="col-md-3">
-                    <button class="btn btn-danger">Deactivate!</button>  
+                    <button id="deactivate" class="btn btn-danger">Deactivate!</button>  
                   </div>           
                 </div>
 

@@ -71,8 +71,7 @@ $(document).ready(function(){
             }else{
                 $("#titleHelp").removeClass('animate__animated animate__shakeX animate__fast');
                 var wait = setTimeout(function(){
-                    $("#titleHelp").addClass('animate__animated animate__shakeX animate__fast');
-                    
+                    $("#titleHelp").addClass('animate__animated animate__shakeX animate__fast');                    
                 },1);
             }            
         }else{

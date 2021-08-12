@@ -141,7 +141,7 @@
 
         //Function to get all post of user by id
         function getAllUserPost($con, $id){
-            $qry = "SELECT A.p_id, A.u_id, A.title,A.p_text,A.p_date,A.p_time,A.reward,A.upvote,A.downvote,A.comment,B.username FROM post AS A INNER JOIN user AS B ON A.u_id = B.u_id WHERE A.u_id = $id AND A.status = 1 ORDER BY A.p_date DESC, A.p_time DESC";
+            $qry = "SELECT A.p_id, A.u_id, A.title,A.p_text,A.p_date,A.p_time,A.reward,A.upvote,A.downvote,A.comment,B.username FROM post AS A INNER JOIN user AS B ON A.u_id = B.u_id WHERE A.u_id = $id AND A.status = true ORDER BY A.p_date DESC, A.p_time DESC";
             $result = $con->query($qry);
             $rows = array();
             while($row = $result->fetch_array()) {
@@ -163,7 +163,7 @@
 
         //Function to get all following list
         function getFollowingList($con, $id){
-            $qry = "SELECT A.username FROM user AS A INNER JOIN (SELECT following_id FROM follow WHERE follower_id = $id) AS B ON A.u_id = B.following_id";
+            $qry = "SELECT A.username FROM user AS A INNER JOIN (SELECT following_id FROM follow WHERE follower_id = $id AND status = true) AS B ON A.u_id = B.following_id WHERE A.status = true";
             $result = $con->query($qry);
             $rows = array();
             while($row = $result->fetch_array()) {
@@ -196,6 +196,25 @@
         function updatePassword($con, $id, $newUsername){
             $success = false;
             $qry = "UPDATE user SET password='$newUsername' WHERE u_id = $id";
+            if($con->query($qry)!=null){
+                $success = true;
+            }
+            return $success; 
+        }
+
+        //Function to deactivate user account
+        function deactivateAccount($con, $id){
+            $success = false;
+            $qry = "UPDATE user SET status=false WHERE u_id = $id";
+            if($con->query($qry)!=null){
+                $success = true;
+            }
+            return $success; 
+        }
+
+        function reactivateAccount($con, $id){
+            $success = false;
+            $qry = "UPDATE user SET status=true WHERE u_id = $id";
             if($con->query($qry)!=null){
                 $success = true;
             }
