@@ -274,7 +274,7 @@
                               <p class='d-inline'>".$post["downvote"]."</p>
                               <button type='button' class='btn btn-sm border border-warning' disabled><img src='images/post/comment.png' alt='upvote' style='width: 15px; height: 15px;'></button>
                               <p class='d-inline'>".$post["comment"]."</p>
-                              <a class='float-right' href='#'>Read More</a>
+                              <a id='readmore_".$post["u_id"]."' class='readmore float-right' href=''>Read More</a>
                             </div>                
                             </div>
                         ");                      
@@ -293,7 +293,7 @@
                                 <p class='d-inline'>".$post["upvote"]."</p>
                                 <button type='button' class='btn btn-sm border border-danger' disabled><img src='images/post/downvote.png' alt='upvote' style='width: 15px; height: 15px;'></button>
                                 <p class='d-inline'>".$post["downvote"]."</p>
-                                <button type='button' class='btn btn-sm border border-warning'><img src='images/post/comment.png' alt='upvote' style='width: 15px; height: 15px;'></button>
+                                <button id='comment_".$post["p_id"]."' type='button' class='comment btn btn-sm border border-warning'><img src='images/post/comment.png' alt='upvote' style='width: 15px; height: 15px;'></button>
                                 <p class='d-inline'>".$post["comment"]."</p>                                
                               </div>                
                               </div>
@@ -311,21 +311,21 @@
                             <div class='p-1'>                            
                           "); 
                           if(strcmp($post["vote"],"upvote")==0){
-                            echo("<button type='button' class='btn btn-primary btn-sm border border-success'>");
+                            echo("<button id='upvote_".$post["p_id"]."' type='button' class='upvote btn btn-primary btn-sm border border-success'>");
                           }else{
-                            echo("<button type='button' class='btn btn-sm border border-success'>");
+                            echo("<button id='upvote_".$post["p_id"]."' type='button' class='upvote btn btn-sm border border-success'>");
                           }                        
                           echo("<img src='images/post/upvote.png' alt='upvote' style='width: 15px; height: 15px;'></button>
-                                <p class='d-inline'>".$post["upvote"]."</p>
+                                <p id='upvotecount_".$post["p_id"]."' class='d-inline'>".$post["upvote"]."</p>
                           ");
                           if(strcmp($post["vote"],"downvote")==0){
-                            echo("<button type='button' class='btn btn-danger btn-sm border border-danger'>");
+                            echo("<button id='downvote_".$post["p_id"]."' type='button' class='downvote btn btn-danger btn-sm border border-danger'>");
                           }else{
-                            echo("<button type='button' class='btn btn-sm border border-danger'>");
+                            echo("<button id='downvote_".$post["p_id"]."' type='button' class='downvote btn btn-sm border border-danger'>");
                           }                        
                           echo("<img src='images/post/downvote.png' alt='upvote' style='width: 15px; height: 15px;'></button>
-                                <p class='d-inline'>".$post["downvote"]."</p>
-                                <button type='button' class='btn btn-sm border border-warning'><img src='images/post/comment.png' alt='upvote' style='width: 15px; height: 15px;'></button>
+                                <p id='downvotecount_".$post["p_id"]."' class='d-inline'>".$post["downvote"]."</p>
+                                <button id='comment_".$post["p_id"]."' type='button' class='comment btn btn-sm border border-warning'><img src='images/post/comment.png' alt='upvote' style='width: 15px; height: 15px;'></button>
                                 <p class='d-inline'>".$post["comment"]."</p>
                               </div>                
                               </div>

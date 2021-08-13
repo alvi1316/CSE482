@@ -212,7 +212,8 @@
             }
             return $success; 
         }
-
+        
+        //Function to reactivate user account
         function reactivateAccount($con, $id){
             $success = false;
             $qry = "UPDATE user SET status=true WHERE u_id = $id";

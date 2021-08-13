@@ -103,32 +103,25 @@ $(document).ready(function(){
             var count = postText.match(/(\w+)/g).length;
             var id = null;
 
+            
             $.post("http://localhost/phpscript.php",
                 {
-                    type: "getid"
+                    type: "publishPost",
+                    postTitle: title,
+                    postText: postText,
+                    count: count
                 },
                 function(res, status){
                     var data = JSON.parse(res);
-                    id = data.data;
-                    $.post("http://localhost/phpscript.php",
-                        {
-                            type: "publishPost",
-                            u_id: id,
-                            postTitle: title,
-                            postText: postText,
-                            count: count
-                        },
-                        function(res, status){
-                            var data = JSON.parse(res);
-                            if(data.success){
-                                $("#postTitle").val('');
-                                $("#postTextArea").val('');
-                                alert("Post is successful!");
-                            }
-                        }
-                    );
+                    if(data.success){
+                        $("#postTitle").val('');
+                        $("#postTextArea").val('');
+                        alert("Post is successful!");
+                    }
                 }
             );
+
+
         }
     });
 });
