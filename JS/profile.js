@@ -62,20 +62,54 @@ $(document).ready(function(){
 
         if($(this).hasClass("btn-primary")){
             //Remove upvote
-            $(this).removeClass("btn-primary");
-            $("#upvotecount_"+postId).text((parseInt($("#upvotecount_"+postId).text())-1).toString());
+            $.post("http://localhost/phpscript.php",
+                {
+                    type: "removeupvote",
+                    p_id: postId
+                },
+                function(res, status){
+                    var data = JSON.parse(res);
+                    if(data.success){
+                        $("#upvote_"+postId).removeClass("btn-primary");
+                        $("#upvotecount_"+postId).text((parseInt($("#upvotecount_"+postId).text())-1).toString());
+                    }
+                }
+            );           
         }else{
 
             if($("#downvote_"+postId).hasClass("btn-danger")){
                 //Remove downvote and add upvote
-                $("#downvote_"+postId).removeClass("btn-danger");
-                $("#downvotecount_"+postId).text((parseInt($("#downvotecount_"+postId).text())-1).toString());
-                $(this).addClass("btn-primary");
-                $("#upvotecount_"+postId).text((parseInt($("#upvotecount_"+postId).text())+1).toString());
+                $.post("http://localhost/phpscript.php",
+                    {
+                        type: "removedownvoteaddupvote",
+                        p_id: postId
+                    },
+                    function(res, status){
+                        
+                        var data = JSON.parse(res);
+                        if(data.success){
+                            $("#downvote_"+postId).removeClass("btn-danger");
+                            $("#downvotecount_"+postId).text((parseInt($("#downvotecount_"+postId).text())-1).toString());
+                            $("#upvote_"+postId).addClass("btn-primary");
+                            $("#upvotecount_"+postId).text((parseInt($("#upvotecount_"+postId).text())+1).toString());
+                        }
+                    }
+                );                
             }else{
                 //Add upvote
-                $(this).addClass("btn-primary");
-                $("#upvotecount_"+postId).text((parseInt($("#upvotecount_"+postId).text())+1).toString());
+                $.post("http://localhost/phpscript.php",
+                    {
+                        type: "addupvote",
+                        p_id: postId
+                    },
+                    function(res, status){
+                        var data = JSON.parse(res);
+                        if(data.success){
+                            $("#upvote_"+postId).addClass("btn-primary");
+                            $("#upvotecount_"+postId).text((parseInt($("#upvotecount_"+postId).text())+1).toString());
+                        }
+                    }
+                ); 
             }
 
         }
@@ -89,20 +123,61 @@ $(document).ready(function(){
 
         if($(this).hasClass("btn-danger")){
             //Remove downvote
-            $(this).removeClass("btn-danger");
-            $("#downvotecount_"+postId).text((parseInt($("#downvotecount_"+postId).text())-1).toString());
+            
+            $.post("http://localhost/phpscript.php",
+                {
+                    type: "removedownvote",
+                    p_id: postId
+                },
+                function(res, status){
+                    
+                    var data = JSON.parse(res);
+                    if(data.success){
+                        $("#downvote_"+postId).removeClass("btn-danger");
+                        $("#downvotecount_"+postId).text((parseInt($("#downvotecount_"+postId).text())-1).toString());
+                    }
+                }
+            );
+
         }else{
 
             if($("#upvote_"+postId).hasClass("btn-primary")){
                 //Remove upvote and add downvote
-                $("#upvote_"+postId).removeClass("btn-primary");
-                $("#upvotecount_"+postId).text((parseInt($("#upvotecount_"+postId).text())-1).toString());
-                $(this).addClass("btn-danger");
-                $("#downvotecount_"+postId).text((parseInt($("#downvotecount_"+postId).text())+1).toString());
+
+                $.post("http://localhost/phpscript.php",
+                    {
+                        type: "removeupvoteadddownvote",
+                        p_id: postId
+                    },
+                    function(res, status){
+                        
+                        var data = JSON.parse(res);
+                        
+                        if(data.success){
+                            $("#upvote_"+postId).removeClass("btn-primary");
+                            $("#upvotecount_"+postId).text((parseInt($("#upvotecount_"+postId).text())-1).toString());
+                            $("#downvote_"+postId).addClass("btn-danger");
+                            $("#downvotecount_"+postId).text((parseInt($("#downvotecount_"+postId).text())+1).toString());
+                        }
+                    }
+                );
+
             }else{
                 //Add downvote
-                $(this).addClass("btn-danger");
-                $("#downvotecount_"+postId).text((parseInt($("#downvotecount_"+postId).text())+1).toString());
+
+                $.post("http://localhost/phpscript.php",
+                    {
+                        type: "adddownvote",
+                        p_id: postId
+                    },
+                    function(res, status){
+                        var data = JSON.parse(res);
+                        if(data.success){
+                            $("#downvote_"+postId).addClass("btn-danger");
+                            $("#downvotecount_"+postId).text((parseInt($("#downvotecount_"+postId).text())+1).toString());
+                        }
+                    }
+                );                
             }
 
         }
@@ -130,7 +205,7 @@ $(document).ready(function(){
                     following_id: following_id,
                 },
                 function(res, status){
-                    console.log(res);
+                    
                     var data = JSON.parse(res);
                     if(data.success){
                         location.reload();
@@ -146,7 +221,7 @@ $(document).ready(function(){
 
                 },
                 function(res, status){
-                    console.log(res);
+                    
                     var data = JSON.parse(res);
                     if(data.success){
                         location.reload();

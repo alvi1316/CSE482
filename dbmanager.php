@@ -222,6 +222,50 @@
             }
             return $success; 
         }
+
+        //Function add upvote to post
+        function addUpvote($con, $p_id, $u_id){
+            $success = false;
+            $qry = "INSERT INTO vote(p_id, u_id, vote) VALUES ($p_id, $u_id, 'upvote') ON DUPLICATE KEY UPDATE vote = 'upvote';
+                    UPDATE post SET upvote = upvote+1 WHERE p_id = $p_id;";
+            if($con->multi_query($qry)!=null){
+                $success = true;
+            }
+            return $success; 
+        }
+
+        //Function remove upvote to post
+        function removeUpvote($con, $p_id, $u_id){
+            $success = false;
+            $qry = "UPDATE vote SET vote = 'none' WHERE p_id = $p_id and u_id = $u_id;
+                    UPDATE post SET upvote = upvote-1 WHERE p_id = $p_id;";
+            if($con->multi_query($qry)!=null){
+                $success = true;
+            }
+            return $success;            
+        }
+
+        //Function add downvote to post
+        function addDownvote($con, $p_id, $u_id){
+            $success = false;
+            $qry = "INSERT INTO vote(p_id, u_id, vote) VALUES ($p_id, $u_id, 'downvote') ON DUPLICATE KEY UPDATE vote = 'downvote';
+                    UPDATE post SET downvote = downvote+1 WHERE p_id = $p_id;";
+            if($con->multi_query($qry)!=null){
+                $success = true;
+            }
+            return $success;
+        }
+
+        //Function remove downvote to post
+        function removeDownvote($con, $p_id, $u_id){
+            $success = false;
+            $qry = "UPDATE vote SET vote = 'none' WHERE p_id = $p_id and u_id = $u_id;
+                    UPDATE post SET downvote = downvote-1 WHERE p_id = $p_id;";
+            if($con->multi_query($qry)!=null){
+                $success = true;
+            }
+            return $success;  
+        }
     }
     
 ?>

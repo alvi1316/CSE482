@@ -16,11 +16,11 @@
         require_once('dbmanager.php');
         require_once('connectionsingleton.php');
 
-        if(strcmp($type, "follow")==0 && isset(isset($_POST["following_id"])){
+        if(strcmp($type, "follow")==0 && isset($_POST["following_id"])){
             $dbmanager = new dbmanager();        
             $con = connectionSingleton::getConnection();
             $response["success"] = $dbmanager->followUser($con, $_SESSION["u_id"], $_POST["following_id"]);            
-        }else if(strcmp($type, "unfollow")==0 && isset(isset($_POST["following_id"])){
+        }else if(strcmp($type, "unfollow")==0 && isset($_POST["following_id"])){
             $dbmanager = new dbmanager();        
             $con = connectionSingleton::getConnection();
             $response["success"] = $dbmanager->unfollowUser($con, $_SESSION["u_id"], $_POST["following_id"]);
@@ -47,6 +47,40 @@
             $dbmanager = new dbmanager();        
             $con = connectionSingleton::getConnection();
             $response["success"] = $dbmanager->deactivateAccount($con, $_SESSION["u_id"]);            
+        }else if(strcmp($type, "removeupvote")==0 && isset($_POST["p_id"])){
+            $dbmanager = new dbmanager();        
+            $con = connectionSingleton::getConnection();
+            $response["success"] = $dbmanager->removeUpvote($con, $_POST["p_id"], $_SESSION["u_id"]);            
+        }else if(strcmp($type, "removedownvoteaddupvote")==0 && isset($_POST["p_id"])){
+            $dbmanager = new dbmanager();        
+            $con = connectionSingleton::getConnection();
+            $response["success"] = $dbmanager->removeDownvote($con, $_POST["p_id"], $_SESSION["u_id"]);
+            while(mysqli_next_result($con)){;}
+            if($response["success"]){
+                $response["success"] = $dbmanager->addUpvote($con, $_POST["p_id"], $_SESSION["u_id"]);
+                while(mysqli_next_result($con)){;}
+            }           
+        }else if(strcmp($type, "addupvote")==0  && isset($_POST["p_id"])){
+            $dbmanager = new dbmanager();        
+            $con = connectionSingleton::getConnection();
+            $response["success"] = $dbmanager->addUpvote($con, $_POST["p_id"], $_SESSION["u_id"]);           
+        }else if(strcmp($type, "removedownvote")==0  && isset($_POST["p_id"])){
+            $dbmanager = new dbmanager();        
+            $con = connectionSingleton::getConnection();
+            $response["success"] = $dbmanager->removeDownvote($con, $_POST["p_id"], $_SESSION["u_id"]);         
+        }else if(strcmp($type, "removeupvoteadddownvote")==0  && isset($_POST["p_id"])){
+            $dbmanager = new dbmanager();        
+            $con = connectionSingleton::getConnection();
+            $response["success"] = $dbmanager->removeUpvote($con, $_POST["p_id"], $_SESSION["u_id"]);
+            while(mysqli_next_result($con)){;}
+            if($response["success"]){
+                $response["success"] = $dbmanager->addDownvote($con, $_POST["p_id"], $_SESSION["u_id"]);
+                while(mysqli_next_result($con)){;}
+            }           
+        }else if(strcmp($type, "adddownvote")==0  && isset($_POST["p_id"])){
+            $dbmanager = new dbmanager();        
+            $con = connectionSingleton::getConnection();
+            $response["success"] = $dbmanager->addDownvote($con, $_POST["p_id"], $_SESSION["u_id"]);          
         }
 
     }
