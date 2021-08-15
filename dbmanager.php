@@ -327,6 +327,19 @@
             
             return $success;
         }
+
+        //Function to get all post of following list
+        function getAllFollowerPost($con, $u_id, $rangeStart, $rangeFinish){
+            
+            $qry = "SELECT A.vote, B.* FROM (SELECT vote,p_id FROM `vote` WHERE u_id = $u_id) AS A RIGHT JOIN (SELECT A.username, B.* FROM (SELECT username, u_id FROM user WHERE status = true) AS A INNER JOIN (SELECT A.* FROM (SELECT * FROM post WHERE status = true) as A INNER JOIN (SELECT following_id FROM `follow` WHERE follower_id = $u_id AND status = true) AS B ON A.u_id = B.following_id) AS B ON A.u_id = B.u_id) AS B ON A.p_id=B.p_id ORDER BY p_date, p_time LIMIT $rangeStart,$rangeFinish";
+
+            $result = $con->query($qry);
+            $rows = array();
+            while($row = $result->fetch_array()) {
+                $rows[] = $row;
+            }
+            return $rows;
+        }
     }
     
 ?>

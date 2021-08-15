@@ -11,6 +11,7 @@
   $dbmanager = new dbmanager();
   $con = connectionSingleton::getConnection();
   $followList = $dbmanager->getFollowingList($con, $_SESSION["u_id"]);
+  $postList = $dbmanager->getAllFollowerPost($con, $_SESSION["u_id"], 0, 5);
 ?>
 
 
@@ -79,62 +80,75 @@
                 <div class="d-flex flex-column flex-md-row justify-content-end"><button id="postBtn" class="btn btn-success">Post</button></div>
               </div>
             </div>
+            <div>
+                  
+              <?php
+                if($postList==null){
+                  echo("
+                      <div class='row p-2 m-md-3 m-1 justify-content-center'>
+                        <h5 class='d-inline text-danger'>Follow users to read posts!</h5>
+                      </div>
+                  ");
+                }else{
+                  foreach($postList as $post){
+                    $readMore = "";
+                    $voteDisabled = "";
+                    $upvoteBtn = "";
+                    $downvoteBtn = "";
+
+                    if($post["reward"]>0){
+                      $readMore = "<a id='readmore_".$post["p_id"]."' class='readmore float-right' href=''>Read More</a>";
+                      $voteDisabled = "disabled";
+                      $pieces = explode(" ", $post["p_text"]);
+                      $post["p_text"] = implode(" ", array_splice($pieces, 0, 100))."...";
+                    }
+
+                    if(strcmp($post["vote"],"upvote")==0){
+                      $upvoteBtn = "btn-primary";
+                    }
+
+                    if(strcmp($post["vote"],"downvote")==0){
+                      $downvoteBtn = "btn-danger";
+                    }
+
+                    echo("
+                      <div class='px-md-5 py-md-3 p-1 mb-3 border border-dark'>
+                      <div>
+                        <a class='text-dark' href='profile.php?profilename=".$post["username"]."'><h6 class='d-inline'>".$post["username"]."</h6></a>
+                        <p class='float-right'>".$post["p_date"]."&nbsp;&nbsp;&nbsp;".date('h:i a', strtotime($post["p_time"]))."</p>
+                      </div>
+                      <H4>".$post["title"]."</H4>
+                      <p>".$post["p_text"]."</p>
+                      <div class='p-1'>
+                        <button id='upvote_".$post["p_id"]."' type='button' class='upvote btn ".$upvoteBtn." btn-sm border border-success' ".$voteDisabled.">
+                          <img src='images/post/upvote.png' alt='upvote' style='width: 15px; height: 15px;'>
+                        </button>
+                        <p id='upvotecount_".$post["p_id"]."' class='d-inline'>".$post["upvote"]."</p>
+                        <button id='downvote_".$post["p_id"]."' type='button' class='downvote btn ".$downvoteBtn." btn-sm border border-danger' ".$voteDisabled.">
+                          <img src='images/post/downvote.png' alt='upvote' style='width: 15px; height: 15px;'>
+                        </button>
+                        <p id='downvotecount_".$post["p_id"]."' class='d-inline'>".$post["downvote"]."</p>
+                        <button id='comment_".$post["p_id"]."' type='button' class='comment btn btn-sm border border-warning' ".$voteDisabled.">
+                          <img src='images/post/comment.png' alt='upvote' style='width: 15px; height: 15px;'>
+                        </button>
+                        <p class='d-inline'>".$post["comment"]."</p>
+                        ".$readMore."
+                      </div>                
+                      </div>
+                    ");
+                  }
+                }               
+              ?>
+            </div>
+
+            <?php
+              if($postList!=null){
+                  echo("
+                    <button class='btn btn-success btn-block'>Load more</button>
+                  ");
+                }
+            ?>
             
-            <div class="px-md-5 py-md-3 p-1 mb-3 border border-dark">
-              <div>
-                <a class="text-dark" href="#"><h5 class="d-inline">Username</h5></a>
-                <p class="float-right">Date and Time</p>
-              </div>
-              <H4>Title</H4>
-              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-              <div class="p-1">
-                <img src="images/post/upvote.png" alt="upvote" style="width: 15px; height: 15px;">
-                <p class="d-inline">26</p>
-                <img src="images/post/downvote.png" alt="upvote" style="width: 15px; height: 15px;">
-                <p class="d-inline">9</p>
-                <img src="images/post/comment.png" alt="upvote" style="width: 15px; height: 15px;">
-                <p class="d-inline">3</p>
-                <a class="float-right" href="#">Read Post</a>
-              </div>                
-            </div>
-
-            <div class="px-md-5 py-md-3 p-1 mb-3 border border-dark">
-              <div>
-                <a class="text-dark" href="#"><h5 class="d-inline">Username</h5></a>
-                <p class="float-right">Date and Time</p>
-              </div>
-              <H4>Title</H4>
-              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-              <div class="p-1">
-                <img src="images/post/upvote.png" alt="upvote" style="width: 15px; height: 15px;">
-                <p class="d-inline">26</p>
-                <img src="images/post/downvote.png" alt="upvote" style="width: 15px; height: 15px;">
-                <p class="d-inline">9</p>
-                <img src="images/post/comment.png" alt="upvote" style="width: 15px; height: 15px;">
-                <p class="d-inline">3</p>
-                <a class="float-right" href="#">Read Post</a>
-              </div>                
-            </div>
-
-            <div class="px-md-5 py-md-3 p-1 mb-3 border border-dark">
-              <div>
-                <a class="text-dark" href="#"><h5 class="d-inline">Username</h5></a>
-                <p class="float-right">Date and Time</p>
-              </div>
-              <H4>Title</H4>
-              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-              <div class="p-1">
-                <img src="images/post/upvote.png" alt="upvote" style="width: 15px; height: 15px;">
-                <p class="d-inline">26</p>
-                <img src="images/post/downvote.png" alt="upvote" style="width: 15px; height: 15px;">
-                <p class="d-inline">9</p>
-                <img src="images/post/comment.png" alt="upvote" style="width: 15px; height: 15px;">
-                <p class="d-inline">3</p>
-                <a class="float-right" href="#">Read Post</a>
-              </div>                
-            </div>
-
-            <button class="btn btn-success btn-block">Load more</button>
 
           </div>
 

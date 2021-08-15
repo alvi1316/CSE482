@@ -57,6 +57,164 @@ function searchFollowingList2() {
 
 
 $(document).ready(function(){
+
+    $(".upvote").click(function(){
+
+        var postId = this.id.split("_")[1];
+
+        if($(this).hasClass("btn-primary")){
+            //Remove upvote
+            $.post("http://localhost/phpscript.php",
+                {
+                    type: "removeupvote",
+                    p_id: postId
+                },
+                function(res, status){
+                    var data = JSON.parse(res);
+                    if(data.success){
+                        $("#upvote_"+postId).removeClass("btn-primary");
+                        $("#upvotecount_"+postId).text((parseInt($("#upvotecount_"+postId).text())-1).toString());
+                    }
+                }
+            );           
+        }else{
+
+            if($("#downvote_"+postId).hasClass("btn-danger")){
+                //Remove downvote and add upvote
+                $.post("http://localhost/phpscript.php",
+                    {
+                        type: "removedownvoteaddupvote",
+                        p_id: postId
+                    },
+                    function(res, status){
+                        if(data.success){
+                            $("#downvote_"+postId).removeClass("btn-danger");
+                            $("#downvotecount_"+postId).text((parseInt($("#downvotecount_"+postId).text())-1).toString());
+                            $("#upvote_"+postId).addClass("btn-primary");
+                            $("#upvotecount_"+postId).text((parseInt($("#upvotecount_"+postId).text())+1).toString());
+                        }
+                    }
+                );                
+            }else{
+                //Add upvote
+                $.post("http://localhost/phpscript.php",
+                    {
+                        type: "addupvote",
+                        p_id: postId
+                    },
+                    function(res, status){
+                        var data = JSON.parse(res);
+                        if(data.success){
+                            $("#upvote_"+postId).addClass("btn-primary");
+                            $("#upvotecount_"+postId).text((parseInt($("#upvotecount_"+postId).text())+1).toString());
+                        }
+                    }
+                ); 
+            }
+        } 
+    });
+
+    $(".downvote").click(function(){
+
+        var postId = this.id.split("_")[1];
+
+        if($(this).hasClass("btn-danger")){
+            
+            $.post("http://localhost/phpscript.php",
+                {
+                    type: "removedownvote",
+                    p_id: postId
+                },
+                function(res, status){
+                    
+                    var data = JSON.parse(res);
+                    if(data.success){
+                        $("#downvote_"+postId).removeClass("btn-danger");
+                        $("#downvotecount_"+postId).text((parseInt($("#downvotecount_"+postId).text())-1).toString());
+                    }
+                }
+            );
+
+        }else{
+
+            if($("#upvote_"+postId).hasClass("btn-primary")){
+                //Remove upvote and add downvote
+
+                $.post("http://localhost/phpscript.php",
+                    {
+                        type: "removeupvoteadddownvote",
+                        p_id: postId
+                    },
+                    function(res, status){
+                        
+                        var data = JSON.parse(res);
+                        
+                        if(data.success){
+                            $("#upvote_"+postId).removeClass("btn-primary");
+                            $("#upvotecount_"+postId).text((parseInt($("#upvotecount_"+postId).text())-1).toString());
+                            $("#downvote_"+postId).addClass("btn-danger");
+                            $("#downvotecount_"+postId).text((parseInt($("#downvotecount_"+postId).text())+1).toString());
+                        }
+                    }
+                );
+
+            }else{
+                $.post("http://localhost/phpscript.php",
+                    {
+                        type: "adddownvote",
+                        p_id: postId
+                    },
+                    function(res, status){
+                        var data = JSON.parse(res);
+                        if(data.success){
+                            $("#downvote_"+postId).addClass("btn-danger");
+                            $("#downvotecount_"+postId).text((parseInt($("#downvotecount_"+postId).text())+1).toString());
+                        }
+                    }
+                );                
+            }
+        }
+    });
+
+    $(".comment").click(function(){
+        var postId = this.id.split("_")[1];
+
+        $.post("http://localhost/phpscript.php",
+            {
+                type: "setsessionpid",
+                p_id: postId
+            },
+            function(res, status){
+                
+                var data = JSON.parse(res);
+                if(data.success){
+                    window.location.replace("post.php");
+                }
+            }
+        );
+        
+    });
+
+    $(".readmore").click(function(){
+        
+        var postId = this.id.split("_")[1];
+
+        $.post("http://localhost/phpscript.php",
+            {
+                type: "setsessionpid",
+                p_id: postId
+            },
+            function(res, status){
+                
+                var data = JSON.parse(res);
+                if(data.success){
+                    window.location.replace("post.php");
+                }
+            }
+        );
+        
+    });
+
     $("#postBtn").click(function(){
         var title = $("#postTitle").val();
         var postText = $("#postTextArea").val();
