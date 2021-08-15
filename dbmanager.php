@@ -266,6 +266,67 @@
             }
             return $success;  
         }
+
+        //Function to get post details by id
+        function getPostDetails($con, $p_id, $u_id){
+            $qry = "SELECT A.*, B.r_id FROM (SELECT A.*, B.vote FROM (SELECT A.*, B.username FROM post AS A INNER JOIN user AS B ON A.u_id = B.u_id WHERE A.p_id = $p_id AND A.status = true) AS A LEFT JOIN (SELECT * FROM vote WHERE u_id = $u_id) AS B ON A.p_id=B.p_id) AS A LEFT JOIN (SELECT * FROM `read` WHERE u_id = $u_id) AS B ON A.p_id = B.p_id";
+            
+            $result  = $con->query($qry);
+            $row = $result->fetch_array();
+            return $row;
+        }
+
+        //Function publish comment
+        function publishComment($con, $p_id, $u_id, $c_text){
+            $success = array();
+            $success["success"] = false;
+            $success["c_id"] = null;
+            $qry = "INSERT INTO comment(p_id, u_id, c_text, c_date, c_time) VALUES ($p_id, $u_id, '$c_text', CURRENT_DATE(), CURRENT_TIME());
+            UPDATE post SET comment = comment+1 WHERE p_id = $p_id;";
+
+            if($con->multi_query($qry)!=null){
+                $success["success"] = true;
+                $success["c_id"] = $con->insert_id;;
+            }
+            return $success;  
+        }
+
+        //Function to get all comments of post by id
+        function getComment($con, $p_id){
+            $qry = "SELECT A.*, B.username FROM (SELECT * FROM comment WHERE p_id = $p_id and status = true) AS A INNER JOIN user AS B ON A.u_id = B.u_id";
+            $result = $con->query($qry);
+            $rows = array();
+            while($row = $result->fetch_array()) {
+                $rows[] = $row;
+            }
+            return $rows;
+        }
+
+        //Function delete comment by id
+        function deleteComment($con, $c_id, $p_id){
+            $success = false;
+            $qry = "UPDATE comment SET status = false WHERE c_id = $c_id;
+                    UPDATE post SET comment = comment-1 WHERE p_id = $p_id;";
+            if($con->multi_query($qry)!=null){
+                $success = true;
+            }
+            return $success; 
+        }
+
+        //Function to publish read
+        function publishRead($con, $p_id, $u_id, $reward){            
+            $success = true;
+            $qry = "INSERT INTO `read`(p_id, u_id) VALUES ($p_id, $u_id);
+            UPDATE user SET reader_rank = reader_rank+$reward WHERE u_id = $u_id;
+            UPDATE user SET reader_badge=(SELECT MAX(b_id) FROM badge WHERE (SELECT reader_rank FROM user WHERE u_id = $u_id)>=minimum_rank) WHERE u_id=$u_id;
+            INSERT INTO summery (u_id, s_date, total_read) VALUES($u_id,DATE(DATE_FORMAT(CURRENT_DATE,'%Y-%m-01')),1) ON DUPLICATE KEY UPDATE  total_read = total_read+1;";
+            
+            if($con->multi_query($qry)==null){                
+                $success = false;
+            }
+            
+            return $success;
+        }
     }
     
 ?>

@@ -81,8 +81,26 @@
             $dbmanager = new dbmanager();        
             $con = connectionSingleton::getConnection();
             $response["success"] = $dbmanager->addDownvote($con, $_POST["p_id"], $_SESSION["u_id"]);          
+        }else if(strcmp($type, "setsessionpid")==0  && isset($_POST["p_id"])){
+            $_SESSION["p_id"] = $_POST["p_id"];
+            $response["success"] = true;
+        }else if(strcmp($type, "publishComment")==0 && isset($_POST["p_id"]) && isset($_POST["c_text"])){
+            $dbmanager = new dbmanager();        
+            $con = connectionSingleton::getConnection();
+            $res =  $dbmanager->publishComment($con, $_POST["p_id"], $_SESSION["u_id"], $_POST["c_text"]);
+            $response["success"] = $res["success"];
+            $response["c_id"] = $res["c_id"];
+            $response["username"] = $_SESSION["username"];
+        }else if(strcmp($type, "deleteComment")==0 && isset($_POST["c_id"]) && isset($_POST["p_id"])){
+            $dbmanager = new dbmanager();        
+            $con = connectionSingleton::getConnection();
+            $response["success"] =  $dbmanager->deleteComment($con, $_POST["c_id"], $_POST["p_id"]);
+        }else if(strcmp($type, "publishRead")==0 && isset($_POST["p_id"]) && isset($_POST["reward"])){
+            $dbmanager = new dbmanager();        
+            $con = connectionSingleton::getConnection();
+            $response["success"] =  $dbmanager->publishRead($con, $_POST["p_id"], $_SESSION["u_id"], $_POST["reward"]);
         }
-
+        
     }
 
     echo json_encode($response);

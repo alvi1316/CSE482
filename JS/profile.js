@@ -118,7 +118,7 @@ $(document).ready(function(){
     });
 
     $(".downvote").click(function(){
-
+        
         var postId = this.id.split("_")[1];
 
         if($(this).hasClass("btn-danger")){
@@ -186,11 +186,43 @@ $(document).ready(function(){
     });
 
     $(".comment").click(function(){
-        console.log("comment!");
+        var postId = this.id.split("_")[1];
+
+        $.post("http://localhost/phpscript.php",
+            {
+                type: "setsessionpid",
+                p_id: postId
+            },
+            function(res, status){
+                
+                var data = JSON.parse(res);
+                if(data.success){
+                    window.location.replace("post.php");
+                }
+            }
+        );
+        
     });
 
+    $(".readmore").click(function(){
+        
+        var postId = this.id.split("_")[1];
 
-
+        $.post("http://localhost/phpscript.php",
+            {
+                type: "setsessionpid",
+                p_id: postId
+            },
+            function(res, status){
+                
+                var data = JSON.parse(res);
+                if(data.success){
+                    window.location.replace("post.php");
+                }
+            }
+        );
+        
+    });
 
 
     $(".follow-btn").click(function(){

@@ -274,7 +274,7 @@
                               <p class='d-inline'>".$post["downvote"]."</p>
                               <button type='button' class='btn btn-sm border border-warning' disabled><img src='images/post/comment.png' alt='upvote' style='width: 15px; height: 15px;'></button>
                               <p class='d-inline'>".$post["comment"]."</p>
-                              <a id='readmore_".$post["u_id"]."' class='readmore float-right' href=''>Read More</a>
+                              <a id='readmore_".$post["p_id"]."' class='readmore float-right' href=''>Read More</a>
                             </div>                
                             </div>
                         ");                      
@@ -341,6 +341,7 @@
 
             <div class="col-md-2 bg-secondary border border-dark">
               <h4 class="text-white mt-2">Option</h4>
+              <a class="d-block text-white" href="profile.php?profilename=<?php echo($_SESSION["username"]);?>"><?php echo($_SESSION["username"]);?></a>
               <a class="d-block text-white" href="feed.php">Home</a>
               <a class="d-block text-white" href="settings.php">Settings</a>
               <a class="d-block text-white" href="logout.php">Logout</a>
@@ -352,7 +353,6 @@
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="JS/profile.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
