@@ -28,11 +28,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
-    <title>Feed</title>
+    <link rel="icon" href="images/other/logo3.png">
+    <title>Word's | Feed</title>
   </head>
   <body>
     <nav class="navbar navbar-dark bg-dark">
-      <span class="navbar-brand mb-0 h1">Potato Rotato</span>
+      <img src="images/other/logo2.gif" width="80" height="45" alt="Word's">
       <form action="search.php" method="post" class="form-inline my-2 my-lg-0">
         <input name="keyword" class="form-control mr-sm-2" type="search" placeholder="Search">
         <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Search</button>
@@ -144,10 +145,12 @@
 
             <?php
               if($postList!=null){
+                if(sizeof($postList)>=5){
                   echo("
                     <button id='readMore' class='btn btn-success btn-block'>Load more</button>
                   ");
-                }
+                }                  
+              }
             ?>
             
 

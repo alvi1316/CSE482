@@ -246,20 +246,23 @@ $(document).ready(function(){
             );
 
         }else if(val == "Unfollow"){
-            $.post("http://localhost/phpscript.php",
-                {
-                    type: "unfollow",
-                    following_id: following_id,
 
-                },
-                function(res, status){
-                    
-                    var data = JSON.parse(res);
-                    if(data.success){
-                        location.reload();
+            if(confirm("Do you really want to Unfollow this user?")){
+                $.post("http://localhost/phpscript.php",
+                    {
+                        type: "unfollow",
+                        following_id: following_id,
+
+                    },
+                    function(res, status){
+                        
+                        var data = JSON.parse(res);
+                        if(data.success){
+                            location.reload();
+                        }
                     }
-                }
-            );
+                );
+            }
         }
     });
 });

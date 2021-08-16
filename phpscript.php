@@ -107,8 +107,7 @@
                 if($response["data"]!=null){
                     $_SESSION["lastpost_id"] = end($response["data"])["p_id"];
                     $response["success"] = true;
-                }
-                
+                } 
             }
         }else if(strcmp($type, "deletePost")==0 && isset($_POST["p_id"])){
             $dbmanager = new dbmanager();        

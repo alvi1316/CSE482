@@ -37,11 +37,17 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
         <script src="JS/signup.js"></script>      
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
-        <title>Signup</title>
+        <link rel="icon" href="images/other/logo3.png">
+        <title>Word's | Signup</title>
     </head>
     <body>
         <div class="container-fluid d-flex justify-content-center align-items-center" style="height: 100vh;">
-            <div style="width: 450px;">
+
+            <div style="width: 450px;">        
+                <div class="row justify-content-center">
+                    <img src="images/other/logo1.gif" class="img-fluid" alt="Word's" style="max-width:300px;">
+                </div>       
+
                 <form method="POST" action="signup.php">
                     <?php
                         if($error){

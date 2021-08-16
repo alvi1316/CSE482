@@ -6,7 +6,7 @@
         
         private function __construct(){
 
-            self::$con = new mysqli("localhost", "root", "", "idontknow");
+            self::$con = new mysqli("localhost", "root", "", "words");
             if(self::$con->connect_error){
                 die("Connection Error".self::$con->connect_error);
             }

@@ -74,7 +74,7 @@
             INNER JOIN badge AS B
             ON A.reader_badge=B.b_id 
             INNER JOIN badge AS C
-            ON A.reader_badge=C.b_id 
+            ON A.writter_badge=C.b_id 
             WHERE username LIKE '%$keyword%'";
             $result = $con->query($qry);
             $rows = array();

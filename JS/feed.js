@@ -337,7 +337,24 @@ function createPostDiv(data){
         downvoteBtn = "btn-danger";
     }
 
-    var div = " <div class='px-md-5 py-md-3 p-1 mb-3 border border-dark'> <div> <a class='text-dark' href='profile.php?profilename="+data.username+"'><h6 class='d-inline'>"+data.username+"</h6></a> <p class='float-right'>"+data.p_date+"&nbsp;&nbsp;&nbsp;"+data.p_time+"</p> </div> <h4>"+data.title+"</h4> <p>"+data.p_text+"</p> <div class='p-1'> <button id='upvote_"+data.p_id+"' type='button' class='upvote btn "+upvoteBtn+" btn-sm border border-success' "+voteDisabled+" > <img src='images/post/upvote.png' alt='upvote' style='width: 15px; height: 15px;'> </button> <p id='upvotecount_"+data.p_id+"' class='d-inline'>"+data.upvote+"</p> <button id='downvote_"+data.p_id+"' type='button' class='downvote btn "+downvoteBtn+" btn-sm border border-danger' "+voteDisabled+" > <img src='images/post/downvote.png' alt='upvote' style='width: 15px; height: 15px;'> </button> <p id='downvotecount_"+data.p_id+"' class='d-inline'>"+data.downvote+"</p> <button id='comment_"+data.p_id+"' type='button' class='comment btn btn-sm border border-warning' "+voteDisabled+" > <img src='images/post/comment.png' alt='upvote' style='width: 15px; height: 15px;'> </button> <p class='d-inline'>"+data.comment+"</p> "+readMore+" </div> </div>";
+    var div = " <div class='px-md-5 py-md-3 p-1 mb-3 border border-dark'> <div> <a class='text-dark' href='profile.php?profilename="+data.username+"'><h6 class='d-inline'>"+data.username+"</h6></a> <p class='float-right'>"+data.p_date+"&nbsp;&nbsp;&nbsp;"+formatAMPM(data.p_time)+"</p> </div> <h4>"+data.title+"</h4> <p>"+data.p_text+"</p> <div class='p-1'> <button id='upvote_"+data.p_id+"' type='button' class='upvote btn "+upvoteBtn+" btn-sm border border-success' "+voteDisabled+" > <img src='images/post/upvote.png' alt='upvote' style='width: 15px; height: 15px;'> </button> <p id='upvotecount_"+data.p_id+"' class='d-inline'>"+data.upvote+"</p> <button id='downvote_"+data.p_id+"' type='button' class='downvote btn "+downvoteBtn+" btn-sm border border-danger' "+voteDisabled+" > <img src='images/post/downvote.png' alt='upvote' style='width: 15px; height: 15px;'> </button> <p id='downvotecount_"+data.p_id+"' class='d-inline'>"+data.downvote+"</p> <button id='comment_"+data.p_id+"' type='button' class='comment btn btn-sm border border-warning' "+voteDisabled+" > <img src='images/post/comment.png' alt='upvote' style='width: 15px; height: 15px;'> </button> <p class='d-inline'>"+data.comment+"</p> "+readMore+" </div> </div>";
 
     return div;
 }
+
+
+function formatAMPM(time) {
+    var hours = time.split(":")[0];
+    var minutes = time.split(":")[1];
+    hours = parseInt(hours);
+    minutes = parseInt(minutes);
+    var ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    if(hours<10){
+      hours = '0'+hours;
+    }
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    var strTime = hours + ':' + minutes + ' ' + ampm;
+    return strTime;
+  }

@@ -24,12 +24,13 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="CSS/settings.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>  
-    
-    <title>Settings</title>
+
+    <link rel="icon" href="images/other/logo3.png">
+    <title>Word's | Settings</title>
   </head>
   <body>
     <nav class="navbar navbar-dark bg-dark">
-      <span class="navbar-brand mb-0 h1">Writer's Vlog</span>
+      <img src="images/other/logo2.gif" width="80" height="45" alt="Word's">
       <form action="search.php" method="post" class="form-inline my-2 my-lg-0">
         <input name="keyword" class="form-control mr-sm-2" type="search" placeholder="Search">
         <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Search</button>

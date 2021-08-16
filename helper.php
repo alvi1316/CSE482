@@ -21,7 +21,7 @@
 			$mail->Subject = "Writter Portal reset password!";
 			$mail->setFrom('299spring2020@gmail.com');
 			$mail->isHTML(true);
-			$mail->Body = "<h1 style=\"color: #20B2AA;\">Dear user!</h1><p>You have requested to change the password of the Writter account. "
+			$mail->Body = "<h1 style=\"color: #20B2AA;\">Dear user!</h1><p>You have requested to change the password of your Word's account! "
 							. "We have assigned a new password for your account.</p>"
 							. "<p>The new password for your account is: <b>". $newPass ."</b></p>";
 

@@ -153,11 +153,12 @@
       }
     </script>
 
-    <title>Profile</title>
+    <link rel="icon" href="images/other/logo3.png">
+    <title>Word's | Profile</title>
   </head>
   <body>
     <nav class="navbar navbar-dark bg-dark">
-      <span class="navbar-brand mb-0 h1">Potato Rotato</span>
+      <img src="images/other/logo2.gif" width="80" height="45" alt="Word's">
       <form action="search.php" method="post" class="form-inline my-2 my-lg-0">
         <input name="keyword" class="form-control mr-sm-2" type="search" placeholder="Search">
         <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Search</button>
