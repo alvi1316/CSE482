@@ -7,11 +7,11 @@
 
   require_once('dbmanager.php');
   require_once('connectionsingleton.php');
-
+  $_SESSION["lastpost_id"] = null;
   $dbmanager = new dbmanager();
   $con = connectionSingleton::getConnection();
   $followList = $dbmanager->getFollowingList($con, $_SESSION["u_id"]);
-  $postList = $dbmanager->getAllFollowerPost($con, $_SESSION["u_id"], 0, 5);
+  $postList = $dbmanager->getAllFollowerPost($con, $_SESSION["u_id"], 5);
 ?>
 
 
@@ -68,7 +68,7 @@
               </div>
           </div>
           
-          <div class="col-md-8 pt-3 h-100 postDiv">
+          <div class="col-md-8 pt-3 pb-3 h-100 postDiv">
 
             <span class="d-block d-md-none" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>      
             
@@ -80,7 +80,7 @@
                 <div class="d-flex flex-column flex-md-row justify-content-end"><button id="postBtn" class="btn btn-success">Post</button></div>
               </div>
             </div>
-            <div>
+            <div id = "followListPostDiv">
                   
               <?php
                 if($postList==null){
@@ -95,6 +95,7 @@
                     $voteDisabled = "";
                     $upvoteBtn = "";
                     $downvoteBtn = "";
+                    $_SESSION["lastpost_id"] = $post["p_id"];
 
                     if($post["reward"]>0){
                       $readMore = "<a id='readmore_".$post["p_id"]."' class='readmore float-right' href=''>Read More</a>";
@@ -144,7 +145,7 @@
             <?php
               if($postList!=null){
                   echo("
-                    <button class='btn btn-success btn-block'>Load more</button>
+                    <button id='readMore' class='btn btn-success btn-block'>Load more</button>
                   ");
                 }
             ?>

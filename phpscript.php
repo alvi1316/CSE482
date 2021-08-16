@@ -99,6 +99,18 @@
             $dbmanager = new dbmanager();        
             $con = connectionSingleton::getConnection();
             $response["success"] =  $dbmanager->publishRead($con, $_POST["p_id"], $_SESSION["u_id"], $_POST["reward"]);
+        }else if(strcmp($type, "loadMore")==0 && isset($_POST["rangeFinish"])){
+            $dbmanager = new dbmanager();        
+            $con = connectionSingleton::getConnection();
+            if($_SESSION["lastpost_id"]!=null){
+                $response["data"] =  $dbmanager->loadMoreFollowerPost($con, $_SESSION["u_id"], $_SESSION["lastpost_id"], $_POST["rangeFinish"]);                
+                if($response["data"]!=null){
+                    $_SESSION["lastpost_id"] = end($response["data"])["p_id"];
+                    $response["success"] = true;
+                }
+                
+            }
+            
         }
         
     }

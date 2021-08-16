@@ -197,7 +197,7 @@ $(document).ready(function(){
                 
                 var data = JSON.parse(res);
                 if(data.success){
-                    window.location.replace("post.php");
+                    window.location.href = "post.php";
                 }
             }
         );
@@ -217,7 +217,7 @@ $(document).ready(function(){
                 
                 var data = JSON.parse(res);
                 if(data.success){
-                    window.location.replace("post.php");
+                    window.location.href = "post.php";
                 }
             }
         );

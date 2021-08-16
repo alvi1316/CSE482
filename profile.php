@@ -274,7 +274,7 @@
                               <p class='d-inline'>".$post["downvote"]."</p>
                               <button type='button' class='btn btn-sm border border-warning' disabled><img src='images/post/comment.png' alt='upvote' style='width: 15px; height: 15px;'></button>
                               <p class='d-inline'>".$post["comment"]."</p>
-                              <a id='readmore_".$post["p_id"]."' class='readmore float-right' href=''>Read More</a>
+                              <a id='readmore_".$post["p_id"]."' class='readmore float-right' href = '' >Read More</a>
                             </div>                
                             </div>
                         ");                      
