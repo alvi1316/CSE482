@@ -353,6 +353,20 @@
             return $rows;
 
         }
+
+        //Function to delete post by id
+        function deletePost($con, $u_id, $p_id){
+            $success = true;
+            $qry = "UPDATE post SET status = false WHERE p_id = $p_id;
+            UPDATE user SET writter_rank = writter_rank-(SELECT reward FROM post WHERE p_id = $p_id) WHERE u_id = $u_id;
+            UPDATE user SET writter_badge=(SELECT MAX(b_id) FROM badge WHERE (SELECT writter_rank FROM user WHERE u_id = $u_id)>=minimum_rank) WHERE u_id=$u_id;
+            UPDATE summery SET total_write = total_write-1 WHERE u_id = $u_id AND s_date = DATE(DATE_FORMAT((SELECT p_date FROM post WHERE p_id = $p_id),'%Y-%m-01'));";
+
+            if($con->multi_query($qry)==null){                
+                $success = false;
+            }
+            return $success;
+        }
     }
     
 ?>

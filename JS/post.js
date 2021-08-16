@@ -91,6 +91,7 @@ $(document).ready(function(){
         
     }
 
+
     $(document).on('click', '.delete-comment', function(){
         console.log("clicked");
         if(confirm("Do u really want to delete the comment?")){
@@ -114,6 +115,27 @@ $(document).ready(function(){
                 }
             );
         }
+    });
+
+    $(".delete-post").click(function(){
+        if(confirm("Do you really want to delete this post?")){
+            var postId = $(".upvote").attr("id").split("_")[1];
+            $.post("http://localhost/phpscript.php",
+                {
+                    type: "deletePost",
+                    p_id: postId
+                },
+                function(res, status){
+                    var data = JSON.parse(res);
+                    if(data.success){
+                        window.history.back();
+                        setTimeout(() => {
+                            location.reload();
+                        }, 0);
+                    }
+                }
+            );
+        }        
     });
 
     $("#commentBtn").click(function(){

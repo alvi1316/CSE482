@@ -22,8 +22,6 @@
     $postdetails = $dbmanager->getPostDetails($con, $_SESSION["p_id"], $_SESSION["u_id"]);
     $commentList = $dbmanager->getComment($con, $_SESSION["p_id"]);
     if($postdetails==null){
-      echo($_SESSION["p_id"]);
-      echo("ERROR");
       $error = true;
     }
   }
@@ -98,9 +96,11 @@
                   $upVoteClass = "";
                   $downVoteClass = "";
                   $hiddenValue = "read";
+                  $deletePost = "";
 
                   if(strcmp($postdetails["username"],$_SESSION["username"])==0){
                     $voteDisabled = "disabled";
+                    $deletePost = "<a id='deletePost_".$postdetails["p_id"]."' class='delete-post float-right text-danger' href=''>Delete Post</a>";
                   }else{
 
                     if(str_word_count($postdetails["p_text"])>100){
@@ -135,6 +135,7 @@
                       <p id='downvotecount_".$postdetails["p_id"]."' class='d-inline'>".$postdetails["downvote"]."</p>
                       <button type='button' class='btn btn-sm border border-warning' disabled><img src='images/post/comment.png' alt='comment' style='width: 15px; height: 15px;'></button>
                       <p id='commentcount_".$postdetails["p_id"]."' class='d-inline'>".$postdetails["comment"]."</p>
+                      ".$deletePost."
                     </div>                
                     </div>
                   ");
@@ -142,10 +143,14 @@
               ?>
               
               
-
-              <h5 class="mb-3">Followers thoughts:</h5>
-
-              <div id="commentSection">
+              <?php
+                if(!$error){
+                  echo("<h5 class='mb-3'>Followers thoughts:</h5>
+                        <div id='commentSection'>
+                      ");
+                } 
+              ?>
+              
 
                 <?php
                   foreach($commentList as $comment){
@@ -168,17 +173,23 @@
                     ");
                   }
                 ?>
-
-              </div>
-              <div class="d-flex flex-row-reverse mb-2">
-                <div class="col-md-11 col-11 border border-dark">
-                  <div class="form-group">
-                    <label for="postTitle"><b>Comment here...</b></label>
-                    <textarea id="commentTextArea" class="form-control my-2" placeholder="Write your comment here..." rows="3"></textarea>
-                    <div class="d-flex flex-column flex-md-row justify-content-end"><button id="commentBtn" class="btn btn-success" <?php echo($commentDisabled); ?> >Comment</button></div>
-                  </div>
-                </div>                
-              </div>    
+              <?php
+                if(!$error){
+                  echo("
+                    </div>
+                    <div class='d-flex flex-row-reverse mb-2'>
+                      <div class='col-md-11 col-11 border border-dark'>
+                        <div class='form-group'>
+                          <label for='postTitle'><b>Comment here...</b></label>
+                          <textarea id='commentTextArea' class='form-control my-2' placeholder='Write your comment here...' rows='3'></textarea>
+                          <div class='d-flex flex-column flex-md-row justify-content-end'><button id='commentBtn' class='btn btn-success' ".$commentDisabled." >Comment</button></div>
+                        </div>
+                      </div>                
+                    </div>    
+                  ");
+                }
+              ?>
+              
 
             </div>
 

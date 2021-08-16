@@ -110,7 +110,10 @@
                 }
                 
             }
-            
+        }else if(strcmp($type, "deletePost")==0 && isset($_POST["p_id"])){
+            $dbmanager = new dbmanager();        
+            $con = connectionSingleton::getConnection();
+            $response["success"] = $dbmanager->deletePost($con, $_SESSION["u_id"], $_POST["p_id"]);
         }
         
     }
