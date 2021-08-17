@@ -32,4 +32,4 @@
 | Contributors  |
 | ------------ |
 | Shah Alvi Hossain |
- | Md. Tahmidur Rahman |
+| Md. Tahmidur Rahman |
