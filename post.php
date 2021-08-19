@@ -132,7 +132,7 @@
                     <div class='p-1'>
                       <button id='upvote_".$postdetails["p_id"]."' type='button' class='upvote btn btn-sm border border-success ".$upVoteClass."' ".$voteDisabled."><img src='images/post/upvote.png' alt='upvote' style='width: 15px; height: 15px;'></button>
                       <p id='upvotecount_".$postdetails["p_id"]."' class='d-inline'>".$postdetails["upvote"]."</p>
-                      <button id='downvote_".$postdetails["p_id"]."' type='button' class='downvote btn btn-sm border border-danger".$downVoteClass."' ".$voteDisabled."><img src='images/post/downvote.png' alt='downvote' style='width: 15px; height: 15px;'></button>
+                      <button id='downvote_".$postdetails["p_id"]."' type='button' class='downvote btn btn-sm border border-danger ".$downVoteClass."' ".$voteDisabled."><img src='images/post/downvote.png' alt='downvote' style='width: 15px; height: 15px;'></button>
                       <p id='downvotecount_".$postdetails["p_id"]."' class='d-inline'>".$postdetails["downvote"]."</p>
                       <button type='button' class='btn btn-sm border border-warning' disabled><img src='images/post/comment.png' alt='comment' style='width: 15px; height: 15px;'></button>
                       <p id='commentcount_".$postdetails["p_id"]."' class='d-inline'>".$postdetails["comment"]."</p>

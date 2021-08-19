@@ -74,7 +74,6 @@ $(document).ready(function(){
                         reward: reward
                     },
                     function(res, status){
-                        console.log(res);
                         var data = JSON.parse(res);
                         if(data.success){
                             alert("Post is mark as read!");
@@ -104,7 +103,6 @@ $(document).ready(function(){
                     p_id: postId
                 },
                 function(res, status){
-                    console.log(res);
                     var data = JSON.parse(res);
                     if(data.success){
                         $("#commentDiv_"+commentId).remove();
@@ -190,6 +188,7 @@ $(document).ready(function(){
                         p_id: postId
                     },
                     function(res, status){
+                        var data = JSON.parse(res);
                         if(data.success){
                             $("#downvote_"+postId).removeClass("btn-danger");
                             $("#downvotecount_"+postId).text((parseInt($("#downvotecount_"+postId).text())-1).toString());

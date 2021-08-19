@@ -227,8 +227,7 @@ $(document).ready(function(){
     });
 
     $("#deactivate").click(function(){
-        if (confirm('Do your really want to deactivate the account!')) {  
-            console.log("YES");          
+        if (confirm('Do your really want to deactivate the account!')) {         
             $.post("http://localhost/phpscript.php",
                 {
                     type: "deactivate"
