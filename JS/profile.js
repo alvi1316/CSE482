@@ -62,7 +62,7 @@ $(document).ready(function(){
 
         if($(this).hasClass("btn-primary")){
             //Remove upvote
-            $.post("http://localhost/phpscript.php",
+            $.post("phpscript.php",
                 {
                     type: "removeupvote",
                     p_id: postId
@@ -79,7 +79,7 @@ $(document).ready(function(){
 
             if($("#downvote_"+postId).hasClass("btn-danger")){
                 //Remove downvote and add upvote
-                $.post("http://localhost/phpscript.php",
+                $.post("phpscript.php",
                     {
                         type: "removedownvoteaddupvote",
                         p_id: postId
@@ -97,7 +97,7 @@ $(document).ready(function(){
                 );                
             }else{
                 //Add upvote
-                $.post("http://localhost/phpscript.php",
+                $.post("phpscript.php",
                     {
                         type: "addupvote",
                         p_id: postId
@@ -124,7 +124,7 @@ $(document).ready(function(){
         if($(this).hasClass("btn-danger")){
             //Remove downvote
             
-            $.post("http://localhost/phpscript.php",
+            $.post("phpscript.php",
                 {
                     type: "removedownvote",
                     p_id: postId
@@ -144,7 +144,7 @@ $(document).ready(function(){
             if($("#upvote_"+postId).hasClass("btn-primary")){
                 //Remove upvote and add downvote
 
-                $.post("http://localhost/phpscript.php",
+                $.post("phpscript.php",
                     {
                         type: "removeupvoteadddownvote",
                         p_id: postId
@@ -165,7 +165,7 @@ $(document).ready(function(){
             }else{
                 //Add downvote
 
-                $.post("http://localhost/phpscript.php",
+                $.post("phpscript.php",
                     {
                         type: "adddownvote",
                         p_id: postId
@@ -188,7 +188,7 @@ $(document).ready(function(){
     $(".comment").click(function(){
         var postId = this.id.split("_")[1];
 
-        $.post("http://localhost/phpscript.php",
+        $.post("phpscript.php",
             {
                 type: "setsessionpid",
                 p_id: postId
@@ -208,7 +208,7 @@ $(document).ready(function(){
         
         var postId = this.id.split("_")[1];
 
-        $.post("http://localhost/phpscript.php",
+        $.post("phpscript.php",
             {
                 type: "setsessionpid",
                 p_id: postId
@@ -231,7 +231,7 @@ $(document).ready(function(){
 
         if(val == "Follow"){           
 
-            $.post("http://localhost/phpscript.php",
+            $.post("phpscript.php",
                 {
                     type: "follow",
                     following_id: following_id,
@@ -248,7 +248,7 @@ $(document).ready(function(){
         }else if(val == "Unfollow"){
 
             if(confirm("Do you really want to Unfollow this user?")){
-                $.post("http://localhost/phpscript.php",
+                $.post("phpscript.php",
                     {
                         type: "unfollow",
                         following_id: following_id,

@@ -67,7 +67,7 @@ $(document).ready(function(){
         if(count>100 && $("#postReadInfo").val()=="notread"){
             var reward = Math.floor(count*0.1);
             setTimeout(function(){
-                $.post("http://localhost/phpscript.php",
+                $.post("phpscript.php",
                     {
                         type: "publishRead",
                         p_id: postId,
@@ -96,7 +96,7 @@ $(document).ready(function(){
         if(confirm("Do u really want to delete the comment?")){
             var commentId = $(this).attr("id").split("_")[1];
             var postId = $(".upvote").attr("id").split("_")[1];
-            $.post("http://localhost/phpscript.php",
+            $.post("phpscript.php",
                 {
                     type: "deleteComment",
                     c_id: commentId,
@@ -118,7 +118,7 @@ $(document).ready(function(){
     $(".delete-post").click(function(){
         if(confirm("Do you really want to delete this post?")){
             var postId = $(".upvote").attr("id").split("_")[1];
-            $.post("http://localhost/phpscript.php",
+            $.post("phpscript.php",
                 {
                     type: "deletePost",
                     p_id: postId
@@ -139,7 +139,7 @@ $(document).ready(function(){
     $("#commentBtn").click(function(){
         var postId = $(".upvote").attr("id").split("_")[1];
         var c_text = $("#commentTextArea").val();
-        $.post("http://localhost/phpscript.php",
+        $.post("phpscript.php",
             {
                 type: "publishComment",
                 p_id: postId,
@@ -165,7 +165,7 @@ $(document).ready(function(){
 
         if($(this).hasClass("btn-primary")){
             //Remove upvote
-            $.post("http://localhost/phpscript.php",
+            $.post("phpscript.php",
                 {
                     type: "removeupvote",
                     p_id: postId
@@ -182,7 +182,7 @@ $(document).ready(function(){
 
             if($("#downvote_"+postId).hasClass("btn-danger")){
                 //Remove downvote and add upvote
-                $.post("http://localhost/phpscript.php",
+                $.post("phpscript.php",
                     {
                         type: "removedownvoteaddupvote",
                         p_id: postId
@@ -199,7 +199,7 @@ $(document).ready(function(){
                 );                
             }else{
                 //Add upvote
-                $.post("http://localhost/phpscript.php",
+                $.post("phpscript.php",
                     {
                         type: "addupvote",
                         p_id: postId
@@ -222,7 +222,7 @@ $(document).ready(function(){
 
         if($(this).hasClass("btn-danger")){
             
-            $.post("http://localhost/phpscript.php",
+            $.post("phpscript.php",
                 {
                     type: "removedownvote",
                     p_id: postId
@@ -242,7 +242,7 @@ $(document).ready(function(){
             if($("#upvote_"+postId).hasClass("btn-primary")){
                 //Remove upvote and add downvote
 
-                $.post("http://localhost/phpscript.php",
+                $.post("phpscript.php",
                     {
                         type: "removeupvoteadddownvote",
                         p_id: postId
@@ -261,7 +261,7 @@ $(document).ready(function(){
                 );
 
             }else{
-                $.post("http://localhost/phpscript.php",
+                $.post("phpscript.php",
                     {
                         type: "adddownvote",
                         p_id: postId

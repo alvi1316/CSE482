@@ -59,7 +59,7 @@ function searchFollowingList2() {
 $(document).ready(function(){
 
     $("#readMore").click(function(){
-        $.post("http://localhost/phpscript.php",
+        $.post("phpscript.php",
         {
             type: "loadMore",
             rangeFinish: 5,
@@ -87,7 +87,7 @@ $(document).ready(function(){
 
         if($(this).hasClass("btn-primary")){
             //Remove upvote
-            $.post("http://localhost/phpscript.php",
+            $.post("phpscript.php",
                 {
                     type: "removeupvote",
                     p_id: postId
@@ -105,7 +105,7 @@ $(document).ready(function(){
 
             if($("#downvote_"+postId).hasClass("btn-danger")){
                 //Remove downvote and add upvote
-                $.post("http://localhost/phpscript.php",
+                $.post("phpscript.php",
                     {
                         type: "removedownvoteaddupvote",
                         p_id: postId
@@ -122,7 +122,7 @@ $(document).ready(function(){
                 );                
             }else{
                 //Add upvote
-                $.post("http://localhost/phpscript.php",
+                $.post("phpscript.php",
                     {
                         type: "addupvote",
                         p_id: postId
@@ -145,7 +145,7 @@ $(document).ready(function(){
 
         if($(this).hasClass("btn-danger")){
             
-            $.post("http://localhost/phpscript.php",
+            $.post("phpscript.php",
                 {
                     type: "removedownvote",
                     p_id: postId
@@ -165,7 +165,7 @@ $(document).ready(function(){
             if($("#upvote_"+postId).hasClass("btn-primary")){
                 //Remove upvote and add downvote
 
-                $.post("http://localhost/phpscript.php",
+                $.post("phpscript.php",
                     {
                         type: "removeupvoteadddownvote",
                         p_id: postId
@@ -184,7 +184,7 @@ $(document).ready(function(){
                 );
 
             }else{
-                $.post("http://localhost/phpscript.php",
+                $.post("phpscript.php",
                     {
                         type: "adddownvote",
                         p_id: postId
@@ -204,7 +204,7 @@ $(document).ready(function(){
     $(document).on('click', '.comment', function(){
         var postId = this.id.split("_")[1];
 
-        $.post("http://localhost/phpscript.php",
+        $.post("phpscript.php",
             {
                 type: "setsessionpid",
                 p_id: postId
@@ -224,7 +224,7 @@ $(document).ready(function(){
         
         var postId = this.id.split("_")[1];
 
-        $.post("http://localhost/phpscript.php",
+        $.post("phpscript.php",
             {
                 type: "setsessionpid",
                 p_id: postId
@@ -287,7 +287,7 @@ $(document).ready(function(){
             var id = null;
 
             
-            $.post("http://localhost/phpscript.php",
+            $.post("phpscript.php",
                 {
                     type: "publishPost",
                     postTitle: title,

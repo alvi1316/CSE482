@@ -84,7 +84,7 @@ $(document).ready(function(){
             var newUsername = $("#username").val();
             $("#username").val("");
 
-            $.post("http://localhost/phpscript.php",
+            $.post("phpscript.php",
                 {
                     type: "updateUsername",
                     newUsername: newUsername,                   
@@ -145,7 +145,7 @@ $(document).ready(function(){
             var newEmail = $("#email").val();
             $("#email").val("");
 
-            $.post("http://localhost/phpscript.php",
+            $.post("phpscript.php",
                 {
                     type: "updateEmail",
                     newEmail: newEmail,                   
@@ -201,7 +201,7 @@ $(document).ready(function(){
             var newPassword = $("#password").val();
             $("#password").val("");
 
-            $.post("http://localhost/phpscript.php",
+            $.post("phpscript.php",
                 {
                     type: "updatePassword",
                     newPassword: newPassword,                   
@@ -228,7 +228,7 @@ $(document).ready(function(){
 
     $("#deactivate").click(function(){
         if (confirm('Do your really want to deactivate the account!')) {         
-            $.post("http://localhost/phpscript.php",
+            $.post("phpscript.php",
                 {
                     type: "deactivate"
                 },
