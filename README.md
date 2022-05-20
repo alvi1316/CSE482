@@ -29,6 +29,26 @@
 
 ----
 
+### Screenshots
+
+#### Login
+<img style="background-color:black;" width="600" src="screenshots/login.png" alt="Login" />
+
+#### Signup
+<img style="background-color:black;" width="600" src="screenshots/signup.png" alt="Login" />
+
+#### Profile
+<img style="background-color:black;" width="600" src="screenshots/profile.png" alt="Login" />
+
+#### Feed
+<img style="background-color:black;" width="600" src="screenshots/feed.png" alt="Login" />
+
+#### Search Profile
+<img style="background-color:black;" width="600" src="screenshots/search_profile.png" alt="Login" />
+
+#### Settings
+<img style="background-color:black;" width="600" src="screenshots/settings.png" alt="Login" />
+
 | Contributors  |
 | ------------ |
 | Shah Alvi Hossain |
